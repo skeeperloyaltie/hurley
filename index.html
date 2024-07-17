@@ -116,10 +116,9 @@
 
                         $('#login-message').html('<div class="alert alert-success">Login successful! Redirecting...</div>');
 
-                        // Simulate redirect or update UI
+                        // Simulate redirect to dashboard.html after successful login
                         setTimeout(function() {
-                            $('#login-form').hide();
-                            $('#content').html('<h2>Welcome, ' + username + '!</h2><p>Role: ' + response.role + '</p>');
+                            window.location.href = 'dashboard/dashboard.html';
                         }, 2000);
                     },
                     error: function(xhr, status, error) {

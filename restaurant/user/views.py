@@ -1,12 +1,10 @@
-
-# restaurant/user/views.py
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .models import User
-from .serializers import UserSerializer, UserLoginSerializer
+from .models import User, StaffMember, FoodItem
+from .serializers import UserSerializer, UserLoginSerializer, StaffMemberSerializer, FoodItemSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -46,3 +44,13 @@ class UserViewSet(viewsets.ModelViewSet):
             users = User.objects.all()
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data)
+
+class StaffMemberViewSet(viewsets.ModelViewSet):
+    queryset = StaffMember.objects.all()
+    serializer_class = StaffMemberSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+class FoodItemViewSet(viewsets.ModelViewSet):
+    queryset = FoodItem.objects.all()
+    serializer_class = FoodItemSerializer
+    permission_classes = [permissions.IsAdminUser]

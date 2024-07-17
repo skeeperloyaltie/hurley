@@ -1,6 +1,5 @@
-# restaurant/user/models.py
-from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     ROLE_CHOICES = (
@@ -17,7 +16,6 @@ class User(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     phone_number = models.CharField(max_length=15)
     hire_date = models.DateField(auto_now_add=True)
-    # Add these lines to resolve the clash
     groups = models.ManyToManyField(
         'auth.Group',
         verbose_name='groups',
@@ -34,3 +32,13 @@ class User(AbstractUser):
         related_name='custom_user_set',
         related_query_name='custom_user',
     )
+
+class StaffMember(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    employment_status = models.CharField(max_length=20)
+
+class FoodItem(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(blank=True, null=True)

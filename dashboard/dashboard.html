@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hurley Restaurant Management System</title>
+    <!-- Add necessary CSS links here, including Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Additional custom styles -->
+    <style>
+        /* Add any custom styles here */
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- Include the header section with the restaurant logo and title -->
+    </header>
+
+    <nav>
+        <!-- Include the navigation menu with links to different sections of the dashboard -->
+    </nav>
+
+    <main>
+        <section id="employee-management">
+            <h2>Employee Management</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Add New Employee</h3>
+                        <form id="add-employee-form">
+                            <!-- Include form fields for adding a new employee -->
+                            <div class="form-group">
+                                <label for="employee-name">Name:</label>
+                                <input type="text" id="employee-name" class="form-control" required>
+                            </div>
+                            <!-- Add more form fields as needed -->
+                            <button type="submit" class="btn btn-primary">Add Employee</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Employee List</h3>
+                        <ul id="employee-list">
+                            <!-- Employee list will be populated dynamically using AJAX -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Include other sections for different functionalities as needed -->
+
+    </main>
+
+    <footer>
+        <!-- Include the footer section with any necessary information or links -->
+    </footer>
+
+    <!-- Include jQuery and Bootstrap JavaScript files -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Add AJAX functionality to handle form submission and populate employee list
+        $(document).ready(function() {
+            // AJAX code to handle form submission and populate employee list
+            $('#add-employee-form').submit(function(e) {
+                e.preventDefault();
+                // Get form data
+                var employeeName = $('#employee-name').val();
+                // Make AJAX POST request to the API endpoint for adding employees
+                $.ajax({
+                    url: 'http://localhost:8000/api/employees/add', // Replace with the actual API endpoint
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: employeeName
+                    }),
+                    success: function(response) {
+                        // Update the employee list dynamically after successful addition
+                        $('#employee-list').append('<li>' + employeeName + '</li>');
+                        // Clear the form fields after successful addition
+                        $('#employee-name').val('');
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response
+                        console.log('Error adding employee: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
