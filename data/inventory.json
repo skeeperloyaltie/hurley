@@ -1,0 +1,7 @@
+{
+    "inventory": [
+        { "name": "Tomatoes", "quantity": 50 },
+        { "name": "Onions", "quantity": 30 },
+        { "name": "Chicken", "quantity": 20 }
+    ]
+}
