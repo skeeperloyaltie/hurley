@@ -5,90 +5,358 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Hurley Restaurant Management System</title>
-    <!-- Add necessary CSS links here, including Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Additional custom styles -->
     <style>
-        /* Add any custom styles here */
+        body { padding-top: 20px; }
+        .form-group { margin-bottom: 15px; }
     </style>
 </head>
 
 <body>
-    <header>
-        <!-- Include the header section with the restaurant logo and title -->
-    </header>
+    <div class="container">
+        <header class="mb-4">
+            <h1 class="text-center">Hurley Restaurant Management System</h1>
+        </header>
 
-    <nav>
-        <!-- Include the navigation menu with links to different sections of the dashboard -->
-    </nav>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#employee-management">Employee Management</a>
+                </li>
+                <!-- Add more nav items as needed -->
+            </ul>
+        </nav>
 
-    <main>
-        <section id="employee-management">
-            <h2>Employee Management</h2>
-            <div class="container">
+        <main>
+            <section id="employee-management">
+                <h2 class="mb-4">Employee Management</h2>
                 <div class="row">
                     <div class="col-md-6">
                         <h3>Add New Employee</h3>
                         <form id="add-employee-form">
-                            <!-- Include form fields for adding a new employee -->
                             <div class="form-group">
-                                <label for="employee-name">Name:</label>
-                                <input type="text" id="employee-name" class="form-control" required>
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" class="form-control" required>
                             </div>
-                            <!-- Add more form fields as needed -->
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Role:</label>
+                                <select id="role" class="form-control" required>
+                                    <option value="manager">Manager</option>
+                                    <option value="front_desk">Front Desk</option>
+                                    <option value="waiter">Waiter</option>
+                                    <option value="chef">Chef</option>
+                                    <option value="sous_chef">Sous Chef</option>
+                                    <option value="dishwasher">Dishwasher</option>
+                                    <option value="bartender">Bartender</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone_number">Phone Number:</label>
+                                <input type="tel" id="phone_number" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="salary">Salary:</label>
+                                <input type="number" id="salary" class="form-control" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="employment_status">Employment Status:</label>
+                                <select id="employment_status" class="form-control" required>
+                                    <option value="full-time">Full-time</option>
+                                    <option value="part-time">Part-time</option>
+                                    <option value="contract">Contract</option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary">Add Employee</button>
                         </form>
                     </div>
                     <div class="col-md-6">
                         <h3>Employee List</h3>
-                        <ul id="employee-list">
+                        <ul id="employee-list" class="list-group">
                             <!-- Employee list will be populated dynamically using AJAX -->
                         </ul>
                     </div>
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h3>Employee Schedule</h3>
+                            <div id="employee-schedule">
+                                <!-- Employee schedule will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+            <section id="food-item-management" class="section">
+                <h2 class="mb-4">Food Item Management</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Add New Food Item</h3>
+                        <form id="add-food-item-form">
+                            <div class="form-group">
+                                <label for="food-name">Name:</label>
+                                <input type="text" id="food-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="food-price">Price:</label>
+                                <input type="number" id="food-price" class="form-control" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="food-description">Description:</label>
+                                <textarea id="food-description" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Food Item</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Food Item List</h3>
+                        <ul id="food-item-list" class="list-group">
+                            <!-- Food item list will be populated dynamically using AJAX -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section id="inventory-management" class="section">
+                <h2 class="mb-4">Inventory Management</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Add New Inventory Item</h3>
+                        <form id="add-inventory-form">
+                            <div class="form-group">
+                                <label for="inventory-name">Item Name:</label>
+                                <input type="text" id="inventory-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inventory-quantity">Quantity:</label>
+                                <input type="number" id="inventory-quantity" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inventory-unit">Unit:</label>
+                                <input type="text" id="inventory-unit" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inventory-reorder-level">Reorder Level:</label>
+                                <input type="number" id="inventory-reorder-level" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Inventory Item</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Inventory List</h3>
+                        <ul id="inventory-list" class="list-group">
+                            <!-- Inventory list will be populated dynamically using AJAX -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-        <!-- Include other sections for different functionalities as needed -->
+        <footer class="mt-4 text-center">
+            <p>&copy; 2024 Hurley Restaurant Management System</p>
+        </footer>
+    </div>
 
-    </main>
-
-    <footer>
-        <!-- Include the footer section with any necessary information or links -->
-    </footer>
-
-    <!-- Include jQuery and Bootstrap JavaScript files -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        // Add AJAX functionality to handle form submission and populate employee list
         $(document).ready(function() {
-            // AJAX code to handle form submission and populate employee list
-            $('#add-employee-form').submit(function(e) {
-                e.preventDefault();
-                // Get form data
-                var employeeName = $('#employee-name').val();
-                // Make AJAX POST request to the API endpoint for adding employees
+            // Function to load employees
+            function loadEmployees() {
                 $.ajax({
-                    url: 'http://localhost:8000/api/employees/add', // Replace with the actual API endpoint
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        name: employeeName
-                    }),
+                    url: 'http://localhost:8000/api/users/',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
+                    },
                     success: function(response) {
-                        // Update the employee list dynamically after successful addition
-                        $('#employee-list').append('<li>' + employeeName + '</li>');
-                        // Clear the form fields after successful addition
-                        $('#employee-name').val('');
+                        $('#employee-list').empty();
+                        response.forEach(function(employee) {
+                            $('#employee-list').append('<li class="list-group-item">' + employee.username + ' - ' + employee.role + '</li>');
+                        });
                     },
                     error: function(xhr, status, error) {
-                        // Handle error response
+                        console.log('Error loading employees: ' + error);
+                    }
+                });
+            }
+             // Function to load food items
+            function loadFoodItems() {
+                $.ajax({
+                    url: 'http://localhost:8000/api/food/',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
+                    },
+                    success: function(response) {
+                        $('#food-item-list').empty();
+                        response.forEach(function(item) {
+                            $('#food-item-list').append('<li class="list-group-item">' + item.name + ' - $' + item.price + '</li>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error loading food items: ' + error);
+                    }
+                });
+            }
+
+            // Load employees on page load
+            loadEmployees();
+            loadFoodItems();
+
+
+            // Handle form submission
+            $('#add-employee-form').submit(function(e) {
+                e.preventDefault();
+                var employeeData = {
+                    username: $('#username').val(),
+                    email: $('#email').val(),
+                    password: $('#password').val(),
+                    role: $('#role').val(),
+                    phone_number: $('#phone_number').val(),
+                    salary: $('#salary').val(),
+                    employment_status: $('#employment_status').val()
+                };
+
+                $.ajax({
+                    url: 'http://localhost:8000/api/users/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(employeeData),
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
+                    },
+                    success: function(response) {
+                        alert('Employee added successfully!');
+                        $('#add-employee-form')[0].reset();
+                        loadEmployees();
+                    },
+                    error: function(xhr, status, error) {
                         console.log('Error adding employee: ' + error);
+                        alert('Error adding employee. Please try again.');
+                    }
+                });
+            });
+            // Handle food item form submission
+            $('#add-food-item-form').submit(function(e) {
+                e.preventDefault();
+                var foodItemData = {
+                    name: $('#food-name').val(),
+                    price: $('#food-price').val(),
+                    description: $('#food-description').val()
+                };
+
+                $.ajax({
+                    url: 'http://localhost:8000/api/food/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(foodItemData),
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
+                    },
+                    success: function(response) {
+                        alert('Food item added successfully!');
+                        $('#add-food-item-form')[0].reset();
+                        loadFoodItems();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error adding food item: ' + error);
+                        alert('Error adding food item. Please try again.');
+                    }
+                });
+            });
+
+         // Function to load inventory items
+         function loadInventory() {
+                $.ajax({
+                    url: 'http://localhost:8000/api/inventory/',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
+                    },
+                    success: function(response) {
+                        $('#inventory-list').empty();
+                        response.forEach(function(item) {
+                            $('#inventory-list').append('<li class="list-group-item">' + item.name + ' - ' + item.quantity + ' ' + item.unit + '</li>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error loading inventory: ' + error);
+                    }
+                });
+            }
+
+            // Function to load employee schedule
+            function loadEmployeeSchedule() {
+                $.ajax({
+                    url: 'http://localhost:8000/api/employee-schedule/',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
+                    },
+                    success: function(response) {
+                        $('#employee-schedule').empty();
+                        // Implement a table or calendar view of the employee schedule
+                        // This is a simple example, you might want to use a calendar library for a more sophisticated view
+                        var scheduleHtml = '<table class="table"><thead><tr><th>Employee</th><th>Date</th><th>Shift</th></tr></thead><tbody>';
+                        response.forEach(function(shift) {
+                            scheduleHtml += '<tr><td>' + shift.employee + '</td><td>' + shift.date + '</td><td>' + shift.shift + '</td></tr>';
+                        });
+                        scheduleHtml += '</tbody></table>';
+                        $('#employee-schedule').html(scheduleHtml);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error loading employee schedule: ' + error);
+                    }
+                });
+            }
+
+            // Load all data on page load
+            loadEmployees();
+            loadFoodItems();
+            loadInventory();
+            loadEmployeeSchedule();
+
+            // Existing form submission handlers for employees and food items
+
+            // Handle inventory form submission
+            $('#add-inventory-form').submit(function(e) {
+                e.preventDefault();
+                var inventoryData = {
+                    name: $('#inventory-name').val(),
+                    quantity: $('#inventory-quantity').val(),
+                    unit: $('#inventory-unit').val(),
+                    reorder_level: $('#inventory-reorder-level').val()
+                };
+
+                $.ajax({
+                    url: 'http://localhost:8000/api/inventory/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(inventoryData),
+                    headers: {
+                        'Authorization': 'Token ' + localStorage.getItem('token')
+                    },
+                    success: function(response) {
+                        alert('Inventory item added successfully!');
+                        $('#add-inventory-form')[0].reset();
+                        loadInventory();
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error adding inventory item: ' + error);
+                        alert('Error adding inventory item. Please try again.');
                     }
                 });
             });
         });
+                   
+    
+
     </script>
 </body>
 
