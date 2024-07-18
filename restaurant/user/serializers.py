@@ -40,7 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
         if hasattr(instance, 'staffmember'):
             rep['salary'] = instance.staffmember.salary
             rep['employment_status'] = instance.staffmember.employment_status
-    return rep
+        return rep
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)

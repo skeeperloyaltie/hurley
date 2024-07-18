@@ -7,8 +7,13 @@
     <title>Admin Dashboard - Hurley Restaurant Management System</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body { padding-top: 20px; }
-        .form-group { margin-bottom: 15px; }
+        body {
+            padding-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
@@ -169,7 +174,7 @@
             // Function to load employees
             function loadEmployees() {
                 $.ajax({
-                    url: 'http://localhost:8000/api/users/',
+                    url: 'http://localhost:8000/api/users/staff',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token')
@@ -185,10 +190,10 @@
                     }
                 });
             }
-             // Function to load food items
+            // Function to load food items
             function loadFoodItems() {
                 $.ajax({
-                    url: 'http://localhost:8000/api/food/',
+                    url: 'http://localhost:8000/api/user/food/',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token')
@@ -252,7 +257,7 @@
                 };
 
                 $.ajax({
-                    url: 'http://localhost:8000/api/food/',
+                    url: 'http://localhost:8000/api/user/food/',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(foodItemData),
@@ -271,10 +276,10 @@
                 });
             });
 
-         // Function to load inventory items
-         function loadInventory() {
+            // Function to load inventory items
+            function loadInventory() {
                 $.ajax({
-                    url: 'http://localhost:8000/api/inventory/',
+                    url: 'http://localhost:8000/api/user/inventory/',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Token ' + localStorage.getItem('token')
@@ -354,9 +359,6 @@
                 });
             });
         });
-                   
-    
-
     </script>
 </body>
 
