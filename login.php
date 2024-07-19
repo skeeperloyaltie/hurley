@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -52,7 +51,6 @@
         </div>
     </header>
 
-
     <section class="h-100 gradient-form" style="background-color: #eee;">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -67,32 +65,30 @@
                                         <h4 class="mt-1 mb-5 pb-1">Hurley Team</h4>
                                     </div>
 
-                                    <form method="POST" action="login_process.php">
-                               
+                                    <form method="POST" action="objects/process_login.php">
                                         <p>Please login to your account</p>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="email" id="username" class="form-control" placeholder="Phone number or email address" />
-                                            <label class="form-label" for="username">Username</label>
+                                            <input type="text" id="username_or_email" name="username_or_email" class="form-control" placeholder="Username or email address" />
+                                            <label class="form-label" for="username_or_email">Username or Email</label>
                                         </div>
 
                                         <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="password" id="password" class="form-control" placeholder="Password" />
+                                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" />
                                             <label class="form-label" for="password">Password</label>
                                         </div>
 
                                         <div class="text-center pt-1 mb-5 pb-1">
-                                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button">Log
-                                                in</button>
+                                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3">Log in</button>
                                             <a class="text-muted" href="#!">Forgot password?</a>
                                         </div>
 
                                         <div class="d-flex align-items-center justify-content-center pb-4">
                                             <p class="mb-0 me-2">Don't have an account?</p>
-                                            <button type="button" data-mdb-button-init data-mdb-ripple-init>        <a href="register.php" class="btn btn-outline-danger">Create new</a>
+                                            <button type="button" data-mdb-button-init data-mdb-ripple-init>        
+                                                <a href="register.php" class="btn btn-outline-danger">Create new</a>
                                             </button>
                                         </div>
-
                                     </form>
 
                                 </div>
@@ -100,7 +96,7 @@
                             <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
                                 <div class="text-black px-3 py-4 p-md-5 mx-md-4">
                                     <h4 class="mb-4">We are more than just a company</h4>
-                                    <p class="small mb-0">Hurley Systems, Authentic, Pricise and functional.</p>
+                                    <p class="small mb-0">Hurley Systems, Authentic, Precise, and Functional.</p>
                                 </div>
                             </div>
                         </div>
@@ -122,5 +118,6 @@
     <br>
     <br>
     <br>
-    <?php
-    include("objects/footer.php"); ?>
+    <?php include("objects/footer.php"); ?>
+</body>
+</html>

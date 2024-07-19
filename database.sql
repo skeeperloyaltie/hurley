@@ -4,6 +4,8 @@ CREATE TABLE Customers (
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     PhoneNumber VARCHAR(15),
     Address VARCHAR(255),
     City VARCHAR(50),
@@ -23,7 +25,6 @@ CREATE TABLE MenuItems (
 );
 
 -- inventory 
-
 CREATE TABLE Inventory (
     InventoryID INT AUTO_INCREMENT PRIMARY KEY,
     MenuItemID INT NOT NULL,
@@ -39,13 +40,13 @@ CREATE TABLE Staff (
     LastName VARCHAR(50) NOT NULL,
     Role ENUM('Admin', 'Cook', 'Waiter', 'Manager') NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
+    Username VARCHAR(50) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     PhoneNumber VARCHAR(15),
-    HireDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    Password VARCHAR(255) NOT NULL
+    HireDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- orders
-
 CREATE TABLE Orders (
     OrderID INT AUTO_INCREMENT PRIMARY KEY,
     CustomerID INT NOT NULL,
@@ -57,9 +58,7 @@ CREATE TABLE Orders (
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
 );
 
-
 -- order items 
-
 CREATE TABLE OrderItems (
     OrderItemID INT AUTO_INCREMENT PRIMARY KEY,
     OrderID INT NOT NULL,
@@ -71,7 +70,6 @@ CREATE TABLE OrderItems (
 );
 
 -- payments table 
-
 CREATE TABLE Payments (
     PaymentID INT AUTO_INCREMENT PRIMARY KEY,
     OrderID INT NOT NULL,
@@ -83,7 +81,6 @@ CREATE TABLE Payments (
 );
 
 -- reservations 
-
 CREATE TABLE Reservations (
     ReservationID INT AUTO_INCREMENT PRIMARY KEY,
     CustomerID INT NOT NULL,
@@ -95,7 +92,6 @@ CREATE TABLE Reservations (
 );
 
 -- feedback table 
-
 CREATE TABLE Feedback (
     FeedbackID INT AUTO_INCREMENT PRIMARY KEY,
     CustomerID INT NOT NULL,
@@ -104,7 +100,6 @@ CREATE TABLE Feedback (
     Rating INT CHECK (Rating >= 1 AND Rating <= 5),
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
 );
-
 
 -- transactions 
 CREATE TABLE Transactions (
@@ -117,4 +112,3 @@ CREATE TABLE Transactions (
     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
     FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
 );
-

@@ -2,7 +2,7 @@
 // Database configuration settings
 define('DB_SERVER', 'localhost');   // Database server
 define('DB_USERNAME', 'root');      // Database username
-define('DB_PASSWORD', '1391');          // Database password
+define('DB_PASSWORD', '');          // Database password
 define('DB_NAME', 'hurley');   // Database name
 
 // Attempt to connect to MySQL database using MySQLi

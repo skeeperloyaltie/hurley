@@ -3,35 +3,41 @@ session_start();
 include 'config.php'; // Make sure to include your database connection file
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
+    $username_or_email = $_POST['username_or_email'];
     $password = $_POST['password'];
 
     // Prepare and execute query
-    $stmt = $conn->prepare("SELECT * FROM Staff WHERE Email = ?");
-    $stmt->bind_param("s", $email); $stmt->close();
-    $conn->close();
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+    if ($stmt = $mysqli->prepare("SELECT * FROM Customers WHERE Email = ? OR Username = ?")) {
+        $stmt->bind_param("ss", $username_or_email, $username_or_email);
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
 
-    if ($user && password_verify($password, $user['Password'])) {
-        $_SESSION['user_id'] = $user['StaffID'];
-        $_SESSION['role'] = $user['Role'];
+        if ($user && password_verify($password, $user['Password'])) {
+            $_SESSION['user_id'] = $user['CustomerID'];
+            $_SESSION['role'] = $user['role'];
 
-        // Redirect based on role
-        if ($user['Role'] === 'Admin') {
-            header("Location: staff/admin/admin.php");
-        } elseif ($user['Role'] === 'Cook' || $user['Role'] === 'Waiter' || $user['Role'] === 'Manager') {
-            header("Location: dashboard/staff_dashboard.php"); // Adjust if you have separate dashboards for staff
+            // Redirect based on role
+            if ($user['role'] === 'Admin') {
+                header("Location: ../staff/admin/admin.php");
+            } elseif ($user['role'] === 'Cook' || $user['role'] === 'Waiter' || $user['role'] === 'Manager') {
+                header("Location: dashboard/staff_dashboard.php"); // Adjust if you have separate dashboards for staff
+            } elseif ($user['role'] === 'customer') {
+                header("Location: ../customer/index.php"); // Default redirection
+            }  else {
+                header("Location: index.php"); 
+            }
+            exit();
         } else {
-            header("Location: index.php"); // Default redirection
+            echo "<p class='text-danger text-center'>Invalid username/email or password.</p>";
         }
-        exit();
+
+        $stmt->close();
     } else {
-        echo "<p class='text-danger text-center'>Invalid email or password.</p>";
+        echo "Error: Could not prepare the query: " . $mysqli->error;
     }
 
-    $stmt->close();
-    $conn->close();
+    $mysqli->close();
 }
 ?>

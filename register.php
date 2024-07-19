@@ -46,7 +46,6 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a href="index.php" class="active">Home<br></a></li>
-
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
@@ -55,6 +54,7 @@
 
         </div>
     </header>
+
     <section class="background-radial-gradient overflow-hidden">
         <style>
             .background-radial-gradient {
@@ -116,107 +116,112 @@
 
                         <div class="card bg-glass">
                             <div class="card-body px-4 py-5 px-md-5">
-                            <form method="POST" action="objects/process_reg.php">
-    <!-- 2 column grid layout with text inputs for the first and last names -->
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div data-mdb-input-init class="form-outline">
-                <input type="text" id="firstName" name="firstName" class="form-control" required />
-                <label class="form-label" for="firstName">First name</label>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div data-mdb-input-init class="form-outline">
-                <input type="text" id="lastName" name="lastName" class="form-control" required />
-                <label class="form-label" for="lastName">Last name</label>
-            </div>
-        </div>
-    </div>
+                                <form method="POST" action="objects/process_reg.php">
+                                    <!-- 2 column grid layout with text inputs for the first and last names -->
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div data-mdb-input-init class="form-outline">
+                                                <input type="text" id="firstName" name="firstName" class="form-control" required />
+                                                <label class="form-label" for="firstName">First name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div data-mdb-input-init class="form-outline">
+                                                <input type="text" id="lastName" name="lastName" class="form-control" required />
+                                                <label class="form-label" for="lastName">Last name</label>
+                                            </div>
+                                        </div>
+                                    </div>
 
-    <!-- Email input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="email" id="email" name="email" class="form-control" required />
-        <label class="form-label" for="email">Email address</label>
-    </div>
+                                    <!-- Email input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="email" id="email" name="email" class="form-control" required />
+                                        <label class="form-label" for="email">Email address</label>
+                                    </div>
 
-    <!-- Phone Number input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" />
-        <label class="form-label" for="phoneNumber">Phone number</label>
-    </div>
+                                    <!-- Username input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text" id="username" name="username" class="form-control" required />
+                                        <label class="form-label" for="username">Username</label>
+                                    </div>
 
-    <!-- Address input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="text" id="address" name="address" class="form-control" />
-        <label class="form-label" for="address">Address</label>
-    </div>
+                                    <!-- Phone Number input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" />
+                                        <label class="form-label" for="phoneNumber">Phone number</label>
+                                    </div>
 
-    <!-- City input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="text" id="city" name="city" class="form-control" />
-        <label class="form-label" for="city">City</label>
-    </div>
+                                    <!-- Address input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text" id="address" name="address" class="form-control" />
+                                        <label class="form-label" for="address">Address</label>
+                                    </div>
 
-    <!-- State input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="text" id="state" name="state" class="form-control" />
-        <label class="form-label" for="state">State</label>
-    </div>
+                                    <!-- City input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text" id="city" name="city" class="form-control" />
+                                        <label class="form-label" for="city">City</label>
+                                    </div>
 
-    <!-- Zip Code input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="text" id="zipCode" name="zipCode" class="form-control" />
-        <label class="form-label" for="zipCode">Zip Code</label>
-    </div>
+                                    <!-- State input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text" id="state" name="state" class="form-control" />
+                                        <label class="form-label" for="state">State</label>
+                                    </div>
 
-    <!-- Password input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="password" id="password" name="password" class="form-control" required />
-        <label class="form-label" for="password">Password</label>
-    </div>
+                                    <!-- Zip Code input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text" id="zipCode" name="zipCode" class="form-control" />
+                                        <label class="form-label" for="zipCode">Zip Code</label>
+                                    </div>
 
-    <!-- Role selection (default to Customer) -->
-    <div class="form-outline mb-4">
-        <select id="role" name="role" class="form-select" required>
-            <option value="Customer" selected>Customer</option>
-        </select>
-        <label class="form-label" for="role">Role</label>
-    </div>
+                                    <!-- Password input -->
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="password" id="password" name="password" class="form-control" required />
+                                        <label class="form-label" for="password">Password</label>
+                                    </div>
 
-    <!-- Checkbox -->
-    <div class="form-check d-flex justify-content-center mb-4">
-        <input class="form-check-input me-2" type="checkbox" value="" id="newsletter" name="newsletter" />
-        <label class="form-check-label" for="newsletter">
-            Subscribe to our newsletter
-        </label>
-    </div>
+                                    <!-- Role selection (default to Customer) -->
+                                    <div class="form-outline mb-4">
+                                        <select id="role" name="role" class="form-select" required>
+                                            <option value="Customer" selected>Customer</option>
+                                        </select>
+                                        <label class="form-label" for="role">Role</label>
+                                    </div>
 
-    <!-- Submit button -->
-    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
-        Sign up
-    </button>
+                                    <!-- Checkbox -->
+                                    <div class="form-check d-flex justify-content-center mb-4">
+                                        <input class="form-check-input me-2" type="checkbox" value="" id="newsletter" name="newsletter" />
+                                        <label class="form-check-label" for="newsletter">
+                                            Subscribe to our newsletter
+                                        </label>
+                                    </div>
 
-    <!-- Register buttons -->
-    <div class="text-center">
-        <p>or sign up with:</p>
-        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-facebook-f"></i>
-        </button>
+                                    <!-- Submit button -->
+                                    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
+                                        Sign up
+                                    </button>
 
-        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-google"></i>
-        </button>
+                                    <!-- Register buttons -->
+                                    <div class="text-center">
+                                        <p>or sign up with:</p>
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
 
-        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-twitter"></i>
-        </button>
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-google"></i>
+                                        </button>
 
-        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-            <i class="fab fa-github"></i>
-        </button>
-    </div>
-</form>
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
 
+                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+                                            <i class="fab fa-github"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -224,5 +229,7 @@
             </div>
         </div>
     </section>
-    <?php
-    include("objects/footer.php"); ?>
+    <?php include("objects/footer.php"); ?>
+</body>
+
+</html>
