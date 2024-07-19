@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../db.php'; // Update this path to your database connection file
+include '../config/config.php'; // Update this path to your database connection file
 
 if ($_SESSION['role'] !== 'Admin') {
     header("Location: ../index.php"); // Redirect if not admin

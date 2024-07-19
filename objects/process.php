@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'config.php'; // Update this path to your database connection file
+include '../accounts/config.php'; // Make sure to include your database connection file
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
@@ -16,18 +16,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password, $user['Password'])) {
         $_SESSION['user_id'] = $user['StaffID'];
         $_SESSION['role'] = $user['Role'];
-        
+
         // Redirect based on role
         if ($user['Role'] === 'Admin') {
-            header("Location: admin/admin.php");
+            header("Location: staff/admin/admin.php");
+        } elseif ($user['Role'] === 'Cook' || $user['Role'] === 'Waiter' || $user['Role'] === 'Manager') {
+            header("Location: dashboard/staff_dashboard.php"); // Adjust if you have separate dashboards for staff
         } else {
-            header("Location: ../dashboard/staff.php"); // Adjust this based on staff roles
+            header("Location: index.php"); // Default redirection
         }
         exit();
     } else {
-        echo "<p>Invalid email or password.</p>";
+        echo "<p class='text-danger text-center'>Invalid email or password.</p>";
     }
 
     $stmt->close();
+    $conn->close();
 }
 ?>
