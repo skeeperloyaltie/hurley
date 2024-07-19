@@ -37,7 +37,7 @@ CREATE TABLE Staff (
     StaffID INT AUTO_INCREMENT PRIMARY KEY,
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
-    Role VARCHAR(50),
+    Role ENUM('Admin', 'Cook', 'Waiter', 'Manager') NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
     PhoneNumber VARCHAR(15),
     HireDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

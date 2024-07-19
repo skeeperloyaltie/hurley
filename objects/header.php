@@ -37,7 +37,7 @@
 
             <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
-                <!-- <img src="assets/img/logo.png" alt=""> -->
+                <img src="assets/img/logo.png" alt="">
                 <h1 class="sitename">Hurley</h1>
                 <span>.</span>
             </a>
@@ -50,7 +50,7 @@
                     <li><a href="#events">Events</a></li>
                     <li><a href="#chefs">Chefs</a></li>
                     <li><a href="#gallery">Gallery</a></li>
-                    <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <!-- <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
                             <li><a href="#">Dropdown 1</a></li>
                             <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
@@ -66,13 +66,41 @@
                             <li><a href="#">Dropdown 3</a></li>
                             <li><a href="#">Dropdown 4</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                     <li><a href="#contact">Contact</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <a class="btn-getstarted" href="index.html#book-a-table">Book a Table</a>
+            <a class="btn-getstarted" href="javascript:void(0);" onclick="checkLogin()">Book a Table</a>
+            <script>
+    function checkLogin() {
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <?php
+            // Fetch the user role from the database
+            include 'account/config.php'; // Update path to your database connection
+            $stmt = $conn->prepare("SELECT Role FROM Staff WHERE StaffID = ?");
+            $stmt->bind_param("i", $_SESSION['user_id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
 
+            if ($user) {
+                // If user is staff, redirect to staff dashboard
+                echo "window.location.href = 'dashboard/staff.php';";
+            } else {
+                // If user is a customer, redirect to booking page
+                echo "window.location.href = 'customer/book.php';";
+            }
+            $stmt->close();
+            ?>
+        <?php else: ?>
+            // If not logged in, redirect to registration or login page
+            window.location.href = 'login.php';
+        <?php endif; ?>
+    }
+    </script>
         </div>
     </header>
+
+
