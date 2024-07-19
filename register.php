@@ -23,16 +23,10 @@
     <link href="assets/vendor/aos/aos.css" rel="stylesheet">
     <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-<!-- Font Awesome -->
-<link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-  rel="stylesheet"
-/>
-<!-- Google Fonts -->
-<link
-  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-  rel="stylesheet"
-/>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet">
 </head>
@@ -122,68 +116,107 @@
 
                         <div class="card bg-glass">
                             <div class="card-body px-4 py-5 px-md-5">
-                                <form>
-                                    <!-- 2 column grid layout with text inputs for the first and last names -->
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4">
-                                            <div data-mdb-input-init class="form-outline">
-                                                <input type="text" id="form3Example1" class="form-control" />
-                                                <label class="form-label" for="form3Example1">First name</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-4">
-                                            <div data-mdb-input-init class="form-outline">
-                                                <input type="text" id="form3Example2" class="form-control" />
-                                                <label class="form-label" for="form3Example2">Last name</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <form method="POST" action="objects/process_reg.php">
+    <!-- 2 column grid layout with text inputs for the first and last names -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div data-mdb-input-init class="form-outline">
+                <input type="text" id="firstName" name="firstName" class="form-control" required />
+                <label class="form-label" for="firstName">First name</label>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div data-mdb-input-init class="form-outline">
+                <input type="text" id="lastName" name="lastName" class="form-control" required />
+                <label class="form-label" for="lastName">Last name</label>
+            </div>
+        </div>
+    </div>
 
-                                    <!-- Email input -->
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="email" id="form3Example3" class="form-control" />
-                                        <label class="form-label" for="form3Example3">Email address</label>
-                                    </div>
+    <!-- Email input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="email" id="email" name="email" class="form-control" required />
+        <label class="form-label" for="email">Email address</label>
+    </div>
 
-                                    <!-- Password input -->
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <input type="password" id="form3Example4" class="form-control" />
-                                        <label class="form-label" for="form3Example4">Password</label>
-                                    </div>
+    <!-- Phone Number input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" />
+        <label class="form-label" for="phoneNumber">Phone number</label>
+    </div>
 
-                                    <!-- Checkbox -->
-                                    <div class="form-check d-flex justify-content-center mb-4">
-                                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
-                                        <label class="form-check-label" for="form2Example33">
-                                            Subscribe to our newsletter
-                                        </label>
-                                    </div>
+    <!-- Address input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" id="address" name="address" class="form-control" />
+        <label class="form-label" for="address">Address</label>
+    </div>
 
-                                    <!-- Submit button -->
-                                    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
-                                        Sign up
-                                    </button>
+    <!-- City input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" id="city" name="city" class="form-control" />
+        <label class="form-label" for="city">City</label>
+    </div>
 
-                                    <!-- Register buttons -->
-                                    <div class="text-center">
-                                        <p>or sign up with:</p>
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-facebook-f"></i>
-                                        </button>
+    <!-- State input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" id="state" name="state" class="form-control" />
+        <label class="form-label" for="state">State</label>
+    </div>
 
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-google"></i>
-                                        </button>
+    <!-- Zip Code input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="text" id="zipCode" name="zipCode" class="form-control" />
+        <label class="form-label" for="zipCode">Zip Code</label>
+    </div>
 
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-twitter"></i>
-                                        </button>
+    <!-- Password input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="password" id="password" name="password" class="form-control" required />
+        <label class="form-label" for="password">Password</label>
+    </div>
 
-                                        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                                            <i class="fab fa-github"></i>
-                                        </button>
-                                    </div>
-                                </form>
+    <!-- Role selection (default to Customer) -->
+    <div class="form-outline mb-4">
+        <select id="role" name="role" class="form-select" required>
+            <option value="Customer" selected>Customer</option>
+        </select>
+        <label class="form-label" for="role">Role</label>
+    </div>
+
+    <!-- Checkbox -->
+    <div class="form-check d-flex justify-content-center mb-4">
+        <input class="form-check-input me-2" type="checkbox" value="" id="newsletter" name="newsletter" />
+        <label class="form-check-label" for="newsletter">
+            Subscribe to our newsletter
+        </label>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
+        Sign up
+    </button>
+
+    <!-- Register buttons -->
+    <div class="text-center">
+        <p>or sign up with:</p>
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-facebook-f"></i>
+        </button>
+
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-google"></i>
+        </button>
+
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-twitter"></i>
+        </button>
+
+        <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
+            <i class="fab fa-github"></i>
+        </button>
+    </div>
+</form>
+
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../accounts/config.php'; // Make sure to include your database connection file
+include 'config.php'; // Make sure to include your database connection file
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
@@ -8,7 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare and execute query
     $stmt = $conn->prepare("SELECT * FROM Staff WHERE Email = ?");
-    $stmt->bind_param("s", $email);
+    $stmt->bind_param("s", $email); $stmt->close();
+    $conn->close();
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
