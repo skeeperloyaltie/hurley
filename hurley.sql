@@ -162,15 +162,18 @@ CREATE TABLE `reservations` (
 --
 
 CREATE TABLE `staff` (
-  `StaffID` int(11) NOT NULL,
+  `StaffID` int(11) NOT NULL AUTO_INCREMENT,
   `FirstName` varchar(50) NOT NULL,
   `LastName` varchar(50) NOT NULL,
+  `Username` varchar(30) NOT NULL,
   `Role` enum('Admin','Cook','Waiter','Manager') NOT NULL,
   `Email` varchar(100) NOT NULL,
   `PhoneNumber` varchar(15) DEFAULT NULL,
   `HireDate` timestamp NOT NULL DEFAULT current_timestamp(),
-  `Password` varchar(255) NOT NULL
+  `Password` varchar(255) NOT NULL,
+  PRIMARY KEY (`StaffID`, `Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 -- --------------------------------------------------------
 
