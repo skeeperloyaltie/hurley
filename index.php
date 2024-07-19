@@ -888,7 +888,7 @@
             <div class="container" data-aos="fade-up" data-aos-delay="100">
 
                 <div class="mb-5">
-                    <iframe style="width: 100%; height: 400px;" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" allowfullscreen=""></iframe>
+                <iframe style="width: 100%; height: 400px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1994.4102508982382!2d36.81627483725639!3d-1.2814330110296943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f11ef1e3cff89%3A0x6696fe39fc962cea!2splace!5e0!3m2!1sen!2ske!4v1721428730440!5m2!1sen!2ske"  allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>                
                 </div>
                 <!-- End Google Maps -->
 
