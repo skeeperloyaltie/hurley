@@ -127,6 +127,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Fetch all staff
 $staffResult = $conn->query("SELECT * FROM Staff");
 
+
+$inventoryID = $_GET['id'];
+$stmt = $conn->prepare("SELECT * FROM inventory WHERE InventoryID = ?");
+$stmt->bind_param("i", $inventoryID);
+$stmt->execute();
+$result = $stmt->get_result();
+$data = $result->fetch_assoc();
+echo json_encode($data);
 ?>
 
 <!DOCTYPE html>
@@ -492,6 +500,81 @@ $staffResult = $conn->query("SELECT * FROM Staff");
                 </tbody>
             </table>
         </div>
+        <!-- Inventory Edit Modal -->
+        <div class="modal fade" id="editInventoryModal" tabindex="-1" role="dialog" aria-labelledby="editInventoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editInventoryModalLabel">Edit Inventory</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="admin.php">
+                            <input type="hidden" id="edit_inventory_id" name="inventory_id">
+                            <div class="form-group">
+                                <label for="edit_menu_item">Menu Item</label>
+                                <select class="form-control" id="edit_menu_item" name="menu_item" required>
+                                    <?php
+                                    // Fetch menu items for the select input
+                                    $menuItems = $conn->query("SELECT MenuItemID, Name FROM menuitems");
+                                    while ($item = $menuItems->fetch_assoc()) {
+                                        echo "<option value='{$item['MenuItemID']}'>{$item['Name']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_quantity">Quantity</label>
+                                <input type="number" class="form-control" id="edit_quantity" name="quantity" required>
+                            </div>
+                            <button type="submit" name="update_inventory" class="btn btn-primary">Update Inventory</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reservation Edit Modal -->
+        <div class="modal fade" id="editReservationModal" tabindex="-1" role="dialog" aria-labelledby="editReservationModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editReservationModalLabel">Edit Reservation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="admin.php">
+                            <input type="hidden" id="edit_reservation_id" name="reservation_id">
+                            <div class="form-group">
+                                <label for="edit_customer_id">Customer ID</label>
+                                <input type="number" class="form-control" id="edit_customer_id" name="customer_id" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_number_of_guests">Number of Guests</label>
+                                <input type="number" class="form-control" id="edit_number_of_guests" name="number_of_guests" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_special_requests">Special Requests</label>
+                                <textarea class="form-control" id="edit_special_requests" name="special_requests"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_status">Status</label>
+                                <select class="form-control" id="edit_status" name="status">
+                                    <option value="Pending">Pending</option>
+                                    <option value="Confirmed">Confirmed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="update_reservation" class="btn btn-primary">Update Reservation</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     <script>
@@ -514,7 +597,85 @@ $staffResult = $conn->query("SELECT * FROM Staff");
             // Open the blacklist modal
             $('#blacklistStaffModal').modal('show');
         }
+
+        function editInventory(inventoryID) {
+            // Fetch the current data for the inventory item
+            fetch('get_inventory.php?id=' + inventoryID)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate the form with current data
+                    document.getElementById('edit_inventory_id').value = data.InventoryID;
+                    document.getElementById('edit_menu_item').value = data.MenuItemID;
+                    document.getElementById('edit_quantity').value = data.Quantity;
+                    // Show the modal or form for editing
+                    $('#editInventoryModal').modal('show');
+                })
+                .catch(error => console.error('Error fetching inventory data:', error));
+        }
+
+        function deleteInventory(inventoryID) {
+            if (confirm('Are you sure you want to delete this inventory item?')) {
+                // Send the delete request
+                fetch('admin.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            'delete_inventory': true,
+                            'inventory_id': inventoryID
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        alert('Inventory item deleted successfully.');
+                        location.reload(); // Reload the page to reflect changes
+                    })
+                    .catch(error => console.error('Error deleting inventory:', error));
+            }
+        }
+
+        function editReservation(reservationID) {
+            // Fetch the current data for the reservation item
+            fetch('get_reservation.php?id=' + reservationID)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate the form with current data
+                    document.getElementById('edit_reservation_id').value = data.ReservationID;
+                    document.getElementById('edit_customer_id').value = data.CustomerID;
+                    document.getElementById('edit_number_of_guests').value = data.NumberOfGuests;
+                    document.getElementById('edit_special_requests').value = data.SpecialRequests;
+                    document.getElementById('edit_status').value = data.Status;
+                    // Show the modal or form for editing
+                    $('#editReservationModal').modal('show');
+                })
+                .catch(error => console.error('Error fetching reservation data:', error));
+        }
+
+        function deleteReservation(reservationID) {
+            if (confirm('Are you sure you want to delete this reservation?')) {
+                // Send the delete request
+                fetch('admin.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            'delete_reservation': true,
+                            'reservation_id': reservationID
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        alert('Reservation deleted successfully.');
+                        location.reload(); // Reload the page to reflect changes
+                    })
+                    .catch(error => console.error('Error deleting reservation:', error));
+            }
+        }
     </script>
+
+
 
 </body>
 
