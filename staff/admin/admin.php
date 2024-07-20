@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
         $stmt = $conn->prepare("INSERT INTO Staff (FirstName, LastName, Role, Email, Username, PhoneNumber, Password) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssss", $firstName, $lastName, $username, $role, $email, $phone, $password);
+        $stmt->bind_param("sssssss", $firstName, $lastName, $role, $email,  $username, $phone, $password);
         $stmt->execute();
         $stmt->close();
     } elseif (isset($_POST['update_role'])) {
@@ -53,11 +53,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $firstName = $_POST['first_name'];
         $lastName = $_POST['last_name'];
         $role = $_POST['role'];
+        $username = $_POST['username'];
         $email = $_POST['email'];
         $phone = $_POST['phone'];
 
-        $stmt = $conn->prepare("UPDATE Staff SET FirstName = ?, LastName = ?, Role = ?, Email = ?, PhoneNumber = ? WHERE StaffID = ?");
-        $stmt->bind_param("sssssi", $firstName, $lastName, $role, $email, $phone, $staffID);
+        $stmt = $conn->prepare("UPDATE Staff SET FirstName = ?, LastName = ?, Role = ?, Email = ?, Username = ?, PhoneNumber = ? WHERE StaffID = ?");
+        $stmt->bind_param("ssssssi", $firstName, $lastName, $role, $email, $phone, $staffID);
         $stmt->execute();
         $stmt->close();
     } elseif (isset($_POST['delete_staff'])) {
@@ -76,7 +77,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!$stmt) {
             die("Prepare failed: " . $conn->error);
         }
-                $stmt->bind_param("i", $staffID);
+        $stmt->bind_param("i", $staffID);
+        $stmt->execute();
+        $stmt->close();
+    } elseif (isset($_POST['add_inventory'])) {
+        // Add inventory
+        $menuItemID = $_POST['menu_item'];
+        $quantity = $_POST['quantity'];
+
+        $stmt = $conn->prepare("INSERT INTO inventory (MenuItemID, Quantity) VALUES (?, ?)");
+        $stmt->bind_param("ii", $menuItemID, $quantity);
+        $stmt->execute();
+        $stmt->close();
+    } elseif (isset($_POST['update_inventory'])) {
+        // Update inventory
+        // Code to handle inventory update
+    } elseif (isset($_POST['delete_inventory'])) {
+        // Delete inventory
+        $inventoryID = $_POST['inventory_id'];
+
+        $stmt = $conn->prepare("DELETE FROM inventory WHERE InventoryID = ?");
+        $stmt->bind_param("i", $inventoryID);
+        $stmt->execute();
+        $stmt->close();
+    } elseif (isset($_POST['add_reservation'])) {
+        // Add reservation
+        $customerID = $_POST['customer_id'];
+        $numberOfGuests = $_POST['number_of_guests'];
+        $specialRequests = $_POST['special_requests'];
+
+        $stmt = $conn->prepare("INSERT INTO reservations (CustomerID, NumberOfGuests, SpecialRequests) VALUES (?, ?, ?)");
+        $stmt->bind_param("iis", $customerID, $numberOfGuests, $specialRequests);
+        $stmt->execute();
+        $stmt->close();
+    } elseif (isset($_POST['update_reservation'])) {
+        // Update reservation
+        // Code to handle reservation update
+    } elseif (isset($_POST['delete_reservation'])) {
+        // Delete reservation
+        $reservationID = $_POST['reservation_id'];
+
+        $stmt = $conn->prepare("DELETE FROM reservations WHERE ReservationID = ?");
+        $stmt->bind_param("i", $reservationID);
         $stmt->execute();
         $stmt->close();
     }
@@ -89,6 +131,7 @@ $staffResult = $conn->query("SELECT * FROM Staff");
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -103,6 +146,7 @@ $staffResult = $conn->query("SELECT * FROM Staff");
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Admin Dashboard</h2>
@@ -117,6 +161,12 @@ $staffResult = $conn->query("SELECT * FROM Staff");
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#staff_list_section">Staff List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#inventories_section">Inventories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#reservations_section">Reservations</a>
             </li>
         </ul>
         <!-- Success Popup -->
@@ -162,36 +212,7 @@ $staffResult = $conn->query("SELECT * FROM Staff");
                     <button type="submit" name="add_staff" class="btn btn-primary">Add Staff</button>
                 </form>
             </div>
-            <script>
-                document.getElementById('addStaffForm').addEventListener('submit', function(event) {
-                    // Prevent the default form submission
-                    event.preventDefault();
 
-                    // Create a FormData object to send via AJAX
-                    var formData = new FormData(this);
-
-                    // Use fetch to send data to the server
-                    fetch('', {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => response.text())
-                    .then(data => {
-                        // Show the success message
-                        var popup = document.getElementById('successPopup');
-                        popup.style.display = 'block';
-
-                        // Hide the popup after 3 seconds
-                        setTimeout(function() {
-                            popup.style.display = 'none';
-                        }, 3000);
-                        
-                        // Optionally, reset the form after submission
-                        document.getElementById('addStaffForm').reset();
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
-                });
-            </script>
 
             <!-- Update Staff Role Form -->
             <div id="update_role_section" class="tab-pane fade">
@@ -213,7 +234,7 @@ $staffResult = $conn->query("SELECT * FROM Staff");
                 </form>
             </div>
 
-                    <!-- Staff List -->
+            <!-- Staff List -->
             <div id="staff_list_section" class="tab-pane fade">
                 <h3>Staff List</h3>
                 <table class="table table-bordered">
@@ -223,6 +244,11 @@ $staffResult = $conn->query("SELECT * FROM Staff");
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Role</th>
+                            <th>Username</th>
+                            <th>IsBlacklisted</th>
+
+
+
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Hire Date</th>
@@ -230,12 +256,15 @@ $staffResult = $conn->query("SELECT * FROM Staff");
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($staff = $staffResult->fetch_assoc()): ?>
+                        <?php while ($staff = $staffResult->fetch_assoc()) : ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($staff['StaffID']); ?></td>
                                 <td><?php echo htmlspecialchars($staff['FirstName']); ?></td>
                                 <td><?php echo htmlspecialchars($staff['LastName']); ?></td>
                                 <td><?php echo htmlspecialchars($staff['Role']); ?></td>
+                                <td><?php echo htmlspecialchars($staff['Username']); ?></td>
+                                <td><?php echo htmlspecialchars($staff['IsBlacklisted']); ?></td>
+
                                 <td><?php echo htmlspecialchars($staff['Email']); ?></td>
                                 <td><?php echo htmlspecialchars($staff['PhoneNumber']); ?></td>
                                 <td><?php echo htmlspecialchars($staff['HireDate']); ?></td>
@@ -252,119 +281,241 @@ $staffResult = $conn->query("SELECT * FROM Staff");
 
         </div>
         <!-- Edit Staff Modal -->
-<div class="modal fade" id="editStaffModal" tabindex="-1" role="dialog" aria-labelledby="editStaffModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editStaffModalLabel">Edit Staff</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="modal fade" id="editStaffModal" tabindex="-1" role="dialog" aria-labelledby="editStaffModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editStaffModalLabel">Edit Staff</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editStaffForm" method="post" action="">
+                            <input type="hidden" id="edit_staff_id" name="staff_id">
+                            <div class="form-group">
+                                <label for="edit_first_name">First Name</label>
+                                <input type="text" class="form-control" id="edit_first_name" name="first_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_last_name">Last Name</label>
+                                <input type="text" class="form-control" id="edit_last_name" name="last_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_role">Role</label>
+                                <select class="form-control" id="edit_role" name="role" required>
+                                    <option value="Cook">Cook</option>
+                                    <option value="Waiter">Waiter</option>
+                                    <option value="Manager">Manager</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_email">Email</label>
+                                <input type="email" class="form-control" id="edit_email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_phone">Phone Number</label>
+                                <input type="text" class="form-control" id="edit_phone" name="phone">
+                            </div>
+                            <button type="submit" name="update_staff" class="btn btn-primary">Update Staff</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form id="editStaffForm" method="post" action="">
-                    <input type="hidden" id="edit_staff_id" name="staff_id">
-                    <div class="form-group">
-                        <label for="edit_first_name">First Name</label>
-                        <input type="text" class="form-control" id="edit_first_name" name="first_name" required>
+        </div>
+
+        <!-- Delete Staff Confirmation Modal -->
+        <div class="modal fade" id="deleteStaffModal" tabindex="-1" role="dialog" aria-labelledby="deleteStaffModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteStaffModalLabel">Delete Staff</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label for="edit_last_name">Last Name</label>
-                        <input type="text" class="form-control" id="edit_last_name" name="last_name" required>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this staff member?</p>
                     </div>
+                    <div class="modal-footer">
+                        <form id="deleteStaffForm" method="post" action="">
+                            <input type="hidden" id="delete_staff_id" name="staff_id">
+                            <button type="submit" name="delete_staff" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blacklist Staff Confirmation Modal -->
+        <div class="modal fade" id="blacklistStaffModal" tabindex="-1" role="dialog" aria-labelledby="blacklistStaffModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="blacklistStaffModalLabel">Blacklist Staff</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to blacklist this staff member? This will prevent them from logging in.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="blacklistStaffForm" method="post" action="">
+                            <input type="hidden" id="blacklist_staff_id" name="staff_id">
+                            <button type="submit" name="blacklist_staff" class="btn btn-warning">Blacklist</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Inventories Section -->
+        <div id="inventories_section" class="tab-pane fade">
+            <h3>Manage Inventories</h3>
+
+            <!-- Add Inventory Form -->
+            <div class="mb-5">
+                <h4>Add New Inventory</h4>
+                <form method="post" action="">
                     <div class="form-group">
-                        <label for="edit_role">Role</label>
-                        <select class="form-control" id="edit_role" name="role" required>
-                            <option value="Cook">Cook</option>
-                            <option value="Waiter">Waiter</option>
-                            <option value="Manager">Manager</option>
+                        <label for="menu_item">Menu Item</label>
+                        <select class="form-control" id="menu_item" name="menu_item" required>
+                            <?php
+                            // Fetch menu items
+                            $menuItems = $conn->query("SELECT MenuItemID, Name FROM menuitems");
+                            while ($item = $menuItems->fetch_assoc()) {
+                                echo "<option value='{$item['MenuItemID']}'>{$item['Name']}</option>";
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="edit_email">Email</label>
-                        <input type="email" class="form-control" id="edit_email" name="email" required>
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                    <button type="submit" name="add_inventory" class="btn btn-primary">Add Inventory</button>
+                </form>
+            </div>
+
+            <!-- Inventory List -->
+            <h4>Inventory List</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Inventory ID</th>
+                        <th>Menu Item</th>
+                        <th>Quantity</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Fetch inventory items
+                    $inventoryResult = $conn->query("SELECT i.InventoryID, m.Name, i.Quantity, i.LastUpdated FROM inventory i JOIN menuitems m ON i.MenuItemID = m.MenuItemID");
+                    while ($inventory = $inventoryResult->fetch_assoc()) {
+                        echo "<tr>
+                    <td>{$inventory['InventoryID']}</td>
+                    <td>{$inventory['Name']}</td>
+                    <td>{$inventory['Quantity']}</td>
+                    <td>{$inventory['LastUpdated']}</td>
+                    <td>
+                        <a href='#' class='btn btn-warning btn-sm' onclick='editInventory({$inventory['InventoryID']})'>Edit</a>
+                        <a href='#' class='btn btn-danger btn-sm' onclick='deleteInventory({$inventory['InventoryID']})'>Delete</a>
+                    </td>
+                </tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reservations Section -->
+        <div id="reservations_section" class="tab-pane fade">
+            <h3>Manage Reservations</h3>
+
+            <!-- Add Reservation Form -->
+            <div class="mb-5">
+                <h4>Add New Reservation</h4>
+                <form method="post" action="">
+                    <div class="form-group">
+                        <label for="customer_id">Customer ID</label>
+                        <input type="number" class="form-control" id="customer_id" name="customer_id" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit_phone">Phone Number</label>
-                        <input type="text" class="form-control" id="edit_phone" name="phone">
+                        <label for="number_of_guests">Number of Guests</label>
+                        <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" required>
                     </div>
-                    <button type="submit" name="update_staff" class="btn btn-primary">Update Staff</button>
+                    <div class="form-group">
+                        <label for="special_requests">Special Requests</label>
+                        <textarea class="form-control" id="special_requests" name="special_requests"></textarea>
+                    </div>
+                    <button type="submit" name="add_reservation" class="btn btn-primary">Add Reservation</button>
                 </form>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Delete Staff Confirmation Modal -->
-<div class="modal fade" id="deleteStaffModal" tabindex="-1" role="dialog" aria-labelledby="deleteStaffModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteStaffModalLabel">Delete Staff</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this staff member?</p>
-            </div>
-            <div class="modal-footer">
-                <form id="deleteStaffForm" method="post" action="">
-                    <input type="hidden" id="delete_staff_id" name="staff_id">
-                    <button type="submit" name="delete_staff" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                </form>
-            </div>
+            <!-- Reservation List -->
+            <h4>Reservation List</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Reservation ID</th>
+                        <th>Customer ID</th>
+                        <th>Reservation Date</th>
+                        <th>Number of Guests</th>
+                        <th>Special Requests</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Fetch reservations
+                    $reservationResult = $conn->query("SELECT * FROM reservations");
+                    while ($reservation = $reservationResult->fetch_assoc()) {
+                        echo "<tr>
+                    <td>{$reservation['ReservationID']}</td>
+                    <td>{$reservation['CustomerID']}</td>
+                    <td>{$reservation['ReservationDate']}</td>
+                    <td>{$reservation['NumberOfGuests']}</td>
+                    <td>{$reservation['SpecialRequests']}</td>
+                    <td>{$reservation['Status']}</td>
+                    <td>
+                        <a href='#' class='btn btn-warning btn-sm' onclick='editReservation({$reservation['ReservationID']})'>Edit</a>
+                        <a href='#' class='btn btn-danger btn-sm' onclick='deleteReservation({$reservation['ReservationID']})'>Delete</a>
+                    </td>
+                </tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
-    </div>
-</div>
-
-<!-- Blacklist Staff Confirmation Modal -->
-<div class="modal fade" id="blacklistStaffModal" tabindex="-1" role="dialog" aria-labelledby="blacklistStaffModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="blacklistStaffModalLabel">Blacklist Staff</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to blacklist this staff member? This will prevent them from logging in.</p>
-            </div>
-            <div class="modal-footer">
-                <form id="blacklistStaffForm" method="post" action="">
-                    <input type="hidden" id="blacklist_staff_id" name="staff_id">
-                    <button type="submit" name="blacklist_staff" class="btn btn-warning">Blacklist</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
     </div>
     <script>
-    function editStaff(staffID) {
-        // Fetch staff details using AJAX and populate the modal
-        // Example of setting values directly (you should ideally fetch from server)
-        document.getElementById('edit_staff_id').value = staffID;
-        // Open the edit modal
-        $('#editStaffModal').modal('show');
-    }
+        function editStaff(staffID) {
+            // Fetch staff details using AJAX and populate the modal
+            // Example of setting values directly (you should ideally fetch from server)
+            document.getElementById('edit_staff_id').value = staffID;
+            // Open the edit modal
+            $('#editStaffModal').modal('show');
+        }
 
-    function deleteStaff(staffID) {
-        document.getElementById('delete_staff_id').value = staffID;
-        // Open the delete modal
-        $('#deleteStaffModal').modal('show');
-    }
+        function deleteStaff(staffID) {
+            document.getElementById('delete_staff_id').value = staffID;
+            // Open the delete modal
+            $('#deleteStaffModal').modal('show');
+        }
 
-    function blacklistStaff(staffID) {
-        document.getElementById('blacklist_staff_id').value = staffID;
-        // Open the blacklist modal
-        $('#blacklistStaffModal').modal('show');
-    }
-</script>
+        function blacklistStaff(staffID) {
+            document.getElementById('blacklist_staff_id').value = staffID;
+            // Open the blacklist modal
+            $('#blacklistStaffModal').modal('show');
+        }
+    </script>
 
 </body>
+
 </html>
