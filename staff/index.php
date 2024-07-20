@@ -45,7 +45,7 @@
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <a class="btn-getstarted" href="register.php">Register</a>
+            <!-- <a class="btn-getstarted" href="register.php">Register</a> -->
 
         </div>
     </header>
@@ -82,10 +82,6 @@
                                             <a class="text-muted" href="#!">Forgot password?</a>
                                         </div>
 
-                                        <div class="d-flex align-items-center justify-content-center pb-4">
-                                            <p class="mb-0 me-2">Don't have an account?</p>
-                                            <a href="register.php" class="btn btn-outline-danger">Create new</a>
-                                        </div>
                                     </form>
 
                                 </div>

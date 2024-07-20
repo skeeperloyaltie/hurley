@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     // Prepare and execute query
-    $stmt = $conn->prepare("SELECT * FROM Staff WHERE (Email = ? OR Username = ?) AND Role = 'Admin'");
+    $stmt = $conn->prepare("SELECT * FROM Staff WHERE (Email = ? OR Username = ?)");
     $stmt->bind_param("ss", $username_or_email, $username_or_email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -20,8 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Redirect based on role
         if ($user['Role'] === 'Admin') {
             header("Location: admin/admin.php");
+        } elseif ($user['Role'] === 'Manager') {
+            header("Location: staff/staff.php"); // Adjust if Managers have a separate page
+        } elseif ($user['Role'] === 'Cook') {
+            header("Location: staff/staff.php"); // Adjust if Cooks have a separate page
+        } elseif ($user['Role'] === 'Waiter') {
+            header("Location: staff/staff.php"); // Adjust if Waiters have a separate page
         } else {
-            header("Location: ../dashboard/staff.php"); // Adjust this based on staff roles
+            echo "<p class='text-danger text-center'>Role not recognized.</p>";
         }
         exit();
     } else {

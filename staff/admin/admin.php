@@ -198,6 +198,7 @@ if (!$menuCombinationsResult) {
 <body>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Admin Dashboard</h2>
+        
 
         <!-- Navigation -->
         <ul class="nav nav-pills mb-4">
@@ -219,6 +220,9 @@ if (!$menuCombinationsResult) {
             <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#menu_management_section">Menu Management</a>
             </li>
+            <div style="float:right;" class="mb-4">
+            <a href="logout.php" class="btn btn-danger">Logout</a>
+        </div>
         </ul>
 
 

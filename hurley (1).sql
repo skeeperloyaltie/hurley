@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 19, 2024 at 03:58 PM
+-- Generation Time: Jul 20, 2024 at 01:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -81,6 +81,13 @@ CREATE TABLE `inventory` (
   `LastUpdated` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `inventory`
+--
+
+INSERT INTO `inventory` (`InventoryID`, `MenuItemID`, `Quantity`, `LastUpdated`) VALUES
+(0, 0, 21, '2024-07-20 00:47:18');
+
 -- --------------------------------------------------------
 
 --
@@ -95,6 +102,28 @@ CREATE TABLE `menuitems` (
   `Category` varchar(50) DEFAULT NULL,
   `Available` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_combinations`
+--
+
+CREATE TABLE `menu_combinations` (
+  `CombinationID` int(11) NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `Description` text DEFAULT NULL,
+  `Items` text NOT NULL,
+  `Price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menu_combinations`
+--
+
+INSERT INTO `menu_combinations` (`CombinationID`, `Name`, `Description`, `Items`, `Price`) VALUES
+(1, 'Breakfast', 'morning food', '0', 32.00),
+(2, 'Breakfast', 'morning food', '0', 32.00);
 
 -- --------------------------------------------------------
 
@@ -155,6 +184,13 @@ CREATE TABLE `reservations` (
   `Status` varchar(50) DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`ReservationID`, `CustomerID`, `ReservationDate`, `NumberOfGuests`, `SpecialRequests`, `Status`) VALUES
+(0, 1, '2024-07-20 02:10:20', 23, '21', 'Approved');
+
 -- --------------------------------------------------------
 
 --
@@ -162,7 +198,7 @@ CREATE TABLE `reservations` (
 --
 
 CREATE TABLE `staff` (
-  `StaffID` int(11) NOT NULL AUTO_INCREMENT,
+  `StaffID` int(11) NOT NULL,
   `FirstName` varchar(50) NOT NULL,
   `LastName` varchar(50) NOT NULL,
   `Username` varchar(30) NOT NULL,
@@ -171,9 +207,18 @@ CREATE TABLE `staff` (
   `PhoneNumber` varchar(15) DEFAULT NULL,
   `HireDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `Password` varchar(255) NOT NULL,
-  PRIMARY KEY (`StaffID`, `Email`)
+  `IsBlacklisted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`StaffID`, `FirstName`, `LastName`, `Username`, `Role`, `Email`, `PhoneNumber`, `HireDate`, `Password`, `IsBlacklisted`) VALUES
+(1, 'Admin', 'User', 'admin', 'Admin', 'admin@example.com', '1234567890', '2024-07-19 23:02:05', '$2y$10$1asKaMgA.IzUoYOQRaUWEuZrSNpsbfIve4w.Ksn3P6yzu3ZQOQFmO', 0),
+(5, 'Skeeper', 'Loyaltie', 'skeepertech@gmail.com', '', 'Cook', '0702940509', '2024-07-19 23:27:55', '$2y$10$sZsAIkMYvkrjeX0xr.YmmuBwoXb5E8E4OF/qBDhiShemol0F9dqKS', 1),
+(8, 'Skeeper', 'Loyaltie', 'freaks', 'Manager', 'skeepertec232323h@gmail.com', '0702940509', '2024-07-19 23:46:32', '$2y$10$YIT3K4Rpygl91TynMVAY2uCN2qA11jLR32x65NKWDqMYsDNDVqVei', 0),
+(10, 'Skeeper', 'Loyaltie', 'skeeper@example.com', 'Manager', 'skeepertech@gmail.com', '0702940509', '2024-07-20 01:32:31', '$2y$10$CRHURPZBK1GyLPLrz06Z0u8hnlmZwkK9jkj0uM25whnThM.3.FFui', 0);
 
 -- --------------------------------------------------------
 
@@ -223,6 +268,12 @@ ALTER TABLE `menuitems`
   ADD PRIMARY KEY (`MenuItemID`);
 
 --
+-- Indexes for table `menu_combinations`
+--
+ALTER TABLE `menu_combinations`
+  ADD PRIMARY KEY (`CombinationID`);
+
+--
 -- Indexes for table `orderitems`
 --
 ALTER TABLE `orderitems`
@@ -260,125 +311,20 @@ ALTER TABLE `staff`
   ADD UNIQUE KEY `Email` (`Email`);
 
 --
--- Indexes for table `transactions`
---
-ALTER TABLE `transactions`
-  ADD PRIMARY KEY (`TransactionID`),
-  ADD KEY `OrderID` (`OrderID`),
-  ADD KEY `StaffID` (`StaffID`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `customers`
+-- AUTO_INCREMENT for table `menu_combinations`
 --
-ALTER TABLE `customers`
-  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `feedback`
---
-ALTER TABLE `feedback`
-  MODIFY `FeedbackID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `inventory`
---
-ALTER TABLE `inventory`
-  MODIFY `InventoryID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `menuitems`
---
-ALTER TABLE `menuitems`
-  MODIFY `MenuItemID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `orderitems`
---
-ALTER TABLE `orderitems`
-  MODIFY `OrderItemID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `orders`
---
-ALTER TABLE `orders`
-  MODIFY `OrderID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `payments`
---
-ALTER TABLE `payments`
-  MODIFY `PaymentID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reservations`
---
-ALTER TABLE `reservations`
-  MODIFY `ReservationID` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `menu_combinations`
+  MODIFY `CombinationID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `StaffID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `transactions`
---
-ALTER TABLE `transactions`
-  MODIFY `TransactionID` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `feedback`
---
-ALTER TABLE `feedback`
-  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`);
-
---
--- Constraints for table `inventory`
---
-ALTER TABLE `inventory`
-  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`MenuItemID`) REFERENCES `menuitems` (`MenuItemID`);
-
---
--- Constraints for table `orderitems`
---
-ALTER TABLE `orderitems`
-  ADD CONSTRAINT `orderitems_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`OrderID`),
-  ADD CONSTRAINT `orderitems_ibfk_2` FOREIGN KEY (`MenuItemID`) REFERENCES `menuitems` (`MenuItemID`);
-
---
--- Constraints for table `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`),
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`StaffID`);
-
---
--- Constraints for table `payments`
---
-ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`OrderID`);
-
---
--- Constraints for table `reservations`
---
-ALTER TABLE `reservations`
-  ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomerID`);
-
---
--- Constraints for table `transactions`
---
-ALTER TABLE `transactions`
-  ADD CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`OrderID`),
-  ADD CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`StaffID`);
+  MODIFY `StaffID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
