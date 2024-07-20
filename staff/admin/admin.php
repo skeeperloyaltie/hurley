@@ -91,7 +91,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
     } elseif (isset($_POST['update_inventory'])) {
         // Update inventory
-        // Code to handle inventory update
+        $inventoryID = $_POST['inventory_id'];
+        $menuItemID = $_POST['menu_item'];
+        $quantity = $_POST['quantity'];
+
+        $stmt = $conn->prepare("UPDATE inventory SET MenuItemID = ?, Quantity = ?, LastUpdated = NOW() WHERE InventoryID = ?");
+        $stmt->bind_param("iii", $menuItemID, $quantity, $inventoryID);
+        $stmt->execute();
+        $stmt->close();
+
+        echo "<script>alert('Inventory updated successfully.');</script>";
     } elseif (isset($_POST['delete_inventory'])) {
         // Delete inventory
         $inventoryID = $_POST['inventory_id'];
@@ -112,7 +121,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
     } elseif (isset($_POST['update_reservation'])) {
         // Update reservation
-        // Code to handle reservation update
+        $reservationID = $_POST['reservation_id'];
+        $customerID = $_POST['customer_id'];
+        $numberOfGuests = $_POST['number_of_guests'];
+        $specialRequests = $_POST['special_requests'];
+        $status = $_POST['status'];
+
+        $stmt = $conn->prepare("UPDATE reservations SET CustomerID = ?, NumberOfGuests = ?, SpecialRequests = ?, Status = ? WHERE ReservationID = ?");
+        $stmt->bind_param("iisss", $customerID, $numberOfGuests, $specialRequests, $status, $reservationID);
+        $stmt->execute();
+        $stmt->close();
+
+        echo "<script>alert('Reservation updated successfully.');</script>";
     } elseif (isset($_POST['delete_reservation'])) {
         // Delete reservation
         $reservationID = $_POST['reservation_id'];
