@@ -177,9 +177,9 @@ echo json_encode($data);
                 <a class="nav-link" data-toggle="pill" href="#reservations_section">Reservations</a>
             </li>
         </ul>
-        <!-- Success Popup -->
-        <div id="successPopup" class="success-popup">
-        </div>
+     
+
+
         <div class="tab-content">
             <!-- Add Staff Form -->
             <div id="add_staff_section" class="tab-pane fade show active">
@@ -286,100 +286,7 @@ echo json_encode($data);
                     </tbody>
                 </table>
             </div>
-
-        </div>
-        <!-- Edit Staff Modal -->
-        <div class="modal fade" id="editStaffModal" tabindex="-1" role="dialog" aria-labelledby="editStaffModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editStaffModalLabel">Edit Staff</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="editStaffForm" method="post" action="">
-                            <input type="hidden" id="edit_staff_id" name="staff_id">
-                            <div class="form-group">
-                                <label for="edit_first_name">First Name</label>
-                                <input type="text" class="form-control" id="edit_first_name" name="first_name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_last_name">Last Name</label>
-                                <input type="text" class="form-control" id="edit_last_name" name="last_name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_role">Role</label>
-                                <select class="form-control" id="edit_role" name="role" required>
-                                    <option value="Cook">Cook</option>
-                                    <option value="Waiter">Waiter</option>
-                                    <option value="Manager">Manager</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_email">Email</label>
-                                <input type="email" class="form-control" id="edit_email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit_phone">Phone Number</label>
-                                <input type="text" class="form-control" id="edit_phone" name="phone">
-                            </div>
-                            <button type="submit" name="update_staff" class="btn btn-primary">Update Staff</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Staff Confirmation Modal -->
-        <div class="modal fade" id="deleteStaffModal" tabindex="-1" role="dialog" aria-labelledby="deleteStaffModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteStaffModalLabel">Delete Staff</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to delete this staff member?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <form id="deleteStaffForm" method="post" action="">
-                            <input type="hidden" id="delete_staff_id" name="staff_id">
-                            <button type="submit" name="delete_staff" class="btn btn-danger">Delete</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Blacklist Staff Confirmation Modal -->
-        <div class="modal fade" id="blacklistStaffModal" tabindex="-1" role="dialog" aria-labelledby="blacklistStaffModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="blacklistStaffModalLabel">Blacklist Staff</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to blacklist this staff member? This will prevent them from logging in.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <form id="blacklistStaffForm" method="post" action="">
-                            <input type="hidden" id="blacklist_staff_id" name="staff_id">
-                            <button type="submit" name="blacklist_staff" class="btn btn-warning">Blacklist</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Inventories Section -->
+            <!-- Inventories Section -->
         <div id="inventories_section" class="tab-pane fade">
             <h3>Manage Inventories</h3>
 
@@ -500,6 +407,105 @@ echo json_encode($data);
                 </tbody>
             </table>
         </div>
+
+
+
+
+
+
+        </div>
+        <!-- Edit Staff Modal -->
+        <div class="modal fade" id="editStaffModal" tabindex="-1" role="dialog" aria-labelledby="editStaffModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editStaffModalLabel">Edit Staff</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editStaffForm" method="post" action="">
+                            <input type="hidden" id="edit_staff_id" name="staff_id">
+                            <div class="form-group">
+                                <label for="edit_first_name">First Name</label>
+                                <input type="text" class="form-control" id="edit_first_name" name="first_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_last_name">Last Name</label>
+                                <input type="text" class="form-control" id="edit_last_name" name="last_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_role">Role</label>
+                                <select class="form-control" id="edit_role" name="role" required>
+                                    <option value="Cook">Cook</option>
+                                    <option value="Waiter">Waiter</option>
+                                    <option value="Manager">Manager</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_email">Email</label>
+                                <input type="email" class="form-control" id="edit_email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_phone">Phone Number</label>
+                                <input type="text" class="form-control" id="edit_phone" name="phone">
+                            </div>
+                            <button type="submit" name="update_staff" class="btn btn-primary">Update Staff</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Staff Confirmation Modal -->
+        <div class="modal fade" id="deleteStaffModal" tabindex="-1" role="dialog" aria-labelledby="deleteStaffModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteStaffModalLabel">Delete Staff</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this staff member?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="deleteStaffForm" method="post" action="">
+                            <input type="hidden" id="delete_staff_id" name="staff_id">
+                            <button type="submit" name="delete_staff" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blacklist Staff Confirmation Modal -->
+        <div class="modal fade" id="blacklistStaffModal" tabindex="-1" role="dialog" aria-labelledby="blacklistStaffModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="blacklistStaffModalLabel">Blacklist Staff</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to blacklist this staff member? This will prevent them from logging in.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form id="blacklistStaffForm" method="post" action="">
+                            <input type="hidden" id="blacklist_staff_id" name="staff_id">
+                            <button type="submit" name="blacklist_staff" class="btn btn-warning">Blacklist</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Inventory Edit Modal -->
         <div class="modal fade" id="editInventoryModal" tabindex="-1" role="dialog" aria-labelledby="editInventoryModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
