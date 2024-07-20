@@ -148,13 +148,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $staffResult = $conn->query("SELECT * FROM Staff");
 
 
-$inventoryID = $_GET['id'];
-$stmt = $conn->prepare("SELECT * FROM inventory WHERE InventoryID = ?");
-$stmt->bind_param("i", $inventoryID);
-$stmt->execute();
-$result = $stmt->get_result();
-$data = $result->fetch_assoc();
-echo json_encode($data);
+if (isset($_GET['id'])) {
+    $inventoryID = $_GET['id'];
+
+    $stmt = $conn->prepare("SELECT * FROM inventory WHERE InventoryID = ?");
+    $stmt->bind_param("i", $inventoryID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data = $result->fetch_assoc();
+    echo json_encode($data);
+} else {
+    echo json_encode(['error' => 'No ID parameter provided']);
+}
+
+
+// Fetch menu items
+$menuItemsQuery = "SELECT * FROM menuitems";
+$menuItemsResult = $conn->query($menuItemsQuery);
+
+if (!$menuItemsResult) {
+    die("Query failed: " . $conn->error);
+}
+
+// Fetch menu combinations
+$menuCombinationsQuery = "SELECT * FROM menu_combinations";
+$menuCombinationsResult = $conn->query($menuCombinationsQuery);
+
+if (!$menuCombinationsResult) {
+    die("Query failed: " . $conn->error);
+}
 ?>
 
 <!DOCTYPE html>
@@ -196,8 +218,11 @@ echo json_encode($data);
             <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#reservations_section">Reservations</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="pill" href="#menu_management_section">Menu Management</a>
+            </li>
         </ul>
-     
+
 
 
         <div class="tab-content">
@@ -307,51 +332,51 @@ echo json_encode($data);
                 </table>
             </div>
             <!-- Inventories Section -->
-        <div id="inventories_section" class="tab-pane fade">
-            <h3>Manage Inventories</h3>
+            <div id="inventories_section" class="tab-pane fade">
+                <h3>Manage Inventories</h3>
 
-            <!-- Add Inventory Form -->
-            <div class="mb-5">
-                <h4>Add New Inventory</h4>
-                <form method="post" action="">
-                    <div class="form-group">
-                        <label for="menu_item">Menu Item</label>
-                        <select class="form-control" id="menu_item" name="menu_item" required>
-                            <?php
-                            // Fetch menu items
-                            $menuItems = $conn->query("SELECT MenuItemID, Name FROM menuitems");
-                            while ($item = $menuItems->fetch_assoc()) {
-                                echo "<option value='{$item['MenuItemID']}'>{$item['Name']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" required>
-                    </div>
-                    <button type="submit" name="add_inventory" class="btn btn-primary">Add Inventory</button>
-                </form>
-            </div>
+                <!-- Add Inventory Form -->
+                <div class="mb-5">
+                    <h4>Add New Inventory</h4>
+                    <form method="post" action="">
+                        <div class="form-group">
+                            <label for="menu_item">Menu Item</label>
+                            <select class="form-control" id="menu_item" name="menu_item" required>
+                                <?php
+                                // Fetch menu items
+                                $menuItems = $conn->query("SELECT MenuItemID, Name FROM menuitems");
+                                while ($item = $menuItems->fetch_assoc()) {
+                                    echo "<option value='{$item['MenuItemID']}'>{$item['Name']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" required>
+                        </div>
+                        <button type="submit" name="add_inventory" class="btn btn-primary">Add Inventory</button>
+                    </form>
+                </div>
 
-            <!-- Inventory List -->
-            <h4>Inventory List</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Inventory ID</th>
-                        <th>Menu Item</th>
-                        <th>Quantity</th>
-                        <th>Last Updated</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    // Fetch inventory items
-                    $inventoryResult = $conn->query("SELECT i.InventoryID, m.Name, i.Quantity, i.LastUpdated FROM inventory i JOIN menuitems m ON i.MenuItemID = m.MenuItemID");
-                    while ($inventory = $inventoryResult->fetch_assoc()) {
-                        echo "<tr>
+                <!-- Inventory List -->
+                <h4>Inventory List</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Inventory ID</th>
+                            <th>Menu Item</th>
+                            <th>Quantity</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Fetch inventory items
+                        $inventoryResult = $conn->query("SELECT i.InventoryID, m.Name, i.Quantity, i.LastUpdated FROM inventory i JOIN menuitems m ON i.MenuItemID = m.MenuItemID");
+                        while ($inventory = $inventoryResult->fetch_assoc()) {
+                            echo "<tr>
                     <td>{$inventory['InventoryID']}</td>
                     <td>{$inventory['Name']}</td>
                     <td>{$inventory['Quantity']}</td>
@@ -361,56 +386,56 @@ echo json_encode($data);
                         <a href='#' class='btn btn-danger btn-sm' onclick='deleteInventory({$inventory['InventoryID']})'>Delete</a>
                     </td>
                 </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Reservations Section -->
-        <div id="reservations_section" class="tab-pane fade">
-            <h3>Manage Reservations</h3>
-
-            <!-- Add Reservation Form -->
-            <div class="mb-5">
-                <h4>Add New Reservation</h4>
-                <form method="post" action="">
-                    <div class="form-group">
-                        <label for="customer_id">Customer ID</label>
-                        <input type="number" class="form-control" id="customer_id" name="customer_id" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="number_of_guests">Number of Guests</label>
-                        <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="special_requests">Special Requests</label>
-                        <textarea class="form-control" id="special_requests" name="special_requests"></textarea>
-                    </div>
-                    <button type="submit" name="add_reservation" class="btn btn-primary">Add Reservation</button>
-                </form>
+                        }
+                        ?>
+                    </tbody>
+                </table>
             </div>
 
-            <!-- Reservation List -->
-            <h4>Reservation List</h4>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Reservation ID</th>
-                        <th>Customer ID</th>
-                        <th>Reservation Date</th>
-                        <th>Number of Guests</th>
-                        <th>Special Requests</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    // Fetch reservations
-                    $reservationResult = $conn->query("SELECT * FROM reservations");
-                    while ($reservation = $reservationResult->fetch_assoc()) {
-                        echo "<tr>
+            <!-- Reservations Section -->
+            <div id="reservations_section" class="tab-pane fade">
+                <h3>Manage Reservations</h3>
+
+                <!-- Add Reservation Form -->
+                <div class="mb-5">
+                    <h4>Add New Reservation</h4>
+                    <form method="post" action="">
+                        <div class="form-group">
+                            <label for="customer_id">Customer ID</label>
+                            <input type="number" class="form-control" id="customer_id" name="customer_id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="number_of_guests">Number of Guests</label>
+                            <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="special_requests">Special Requests</label>
+                            <textarea class="form-control" id="special_requests" name="special_requests"></textarea>
+                        </div>
+                        <button type="submit" name="add_reservation" class="btn btn-primary">Add Reservation</button>
+                    </form>
+                </div>
+
+                <!-- Reservation List -->
+                <h4>Reservation List</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Reservation ID</th>
+                            <th>Customer ID</th>
+                            <th>Reservation Date</th>
+                            <th>Number of Guests</th>
+                            <th>Special Requests</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Fetch reservations
+                        $reservationResult = $conn->query("SELECT * FROM reservations");
+                        while ($reservation = $reservationResult->fetch_assoc()) {
+                            echo "<tr>
                     <td>{$reservation['ReservationID']}</td>
                     <td>{$reservation['CustomerID']}</td>
                     <td>{$reservation['ReservationDate']}</td>
@@ -422,18 +447,221 @@ echo json_encode($data);
                         <a href='#' class='btn btn-danger btn-sm' onclick='deleteReservation({$reservation['ReservationID']})'>Delete</a>
                     </td>
                 </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Menu Management Section -->
+            <div id="menu_management_section" class="tab-pane fade">
+                <h3>Menu Management</h3>
+
+                <!-- Add Menu Item Form -->
+                <div class="mb-5">
+                    <h4>Add New Menu Item</h4>
+                    <form method="post" action="">
+                        <div class="form-group">
+                            <label for="item_name">Item Name</label>
+                            <input type="text" class="form-control" id="item_name" name="item_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item_description">Description</label>
+                            <textarea class="form-control" id="item_description" name="item_description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="item_price">Price</label>
+                            <input type="number" step="0.01" class="form-control" id="item_price" name="item_price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="item_category">Category</label>
+                            <input type="text" class="form-control" id="item_category" name="item_category">
+                        </div>
+                        <div class="form-group">
+                            <label for="item_available">Available</label>
+                            <select class="form-control" id="item_available" name="item_available">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                        <button type="submit" name="add_menu_item" class="btn btn-primary">Add Menu Item</button>
+                    </form>
+                </div>
+
+                <!-- Update/Delete Menu Items -->
+                <div class="mb-5">
+                    <h4>Update/Delete Menu Items</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Menu Item ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Available</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($menuItem = $menuItemsResult->fetch_assoc()) : ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($menuItem['MenuItemID']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuItem['Name']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuItem['Description']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuItem['Price']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuItem['Category']); ?></td>
+                                    <td><?php echo $menuItem['Available'] ? 'Yes' : 'No'; ?></td>
+                                    <td>
+                                        <button onclick="editMenuItem(<?php echo $menuItem['MenuItemID']; ?>)" class="btn btn-warning btn-sm">Edit</button>
+                                        <button onclick="deleteMenuItem(<?php echo $menuItem['MenuItemID']; ?>)" class="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add Menu Combination Form -->
+                <div class="mb-5">
+                    <h4>Add New Menu Combination</h4>
+                    <form method="post" action="">
+                        <div class="form-group">
+                            <label for="combination_name">Combination Name</label>
+                            <input type="text" class="form-control" id="combination_name" name="combination_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="combination_description">Description</label>
+                            <textarea class="form-control" id="combination_description" name="combination_description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="combination_items">Items (Comma Separated IDs)</label>
+                            <input type="text" class="form-control" id="combination_items" name="combination_items" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="combination_price">Price</label>
+                            <input type="number" step="0.01" class="form-control" id="combination_price" name="combination_price" required>
+                        </div>
+                        <button type="submit" name="add_menu_combination" class="btn btn-primary">Add Menu Combination</button>
+                    </form>
+                </div>
+
+                <!-- Update/Delete Menu Combinations -->
+                <div class="mb-5">
+                    <h4>Update/Delete Menu Combinations</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Combination ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Items</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($menuCombination = $menuCombinationsResult->fetch_assoc()) : ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($menuCombination['CombinationID']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuCombination['Name']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuCombination['Description']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuCombination['Items']); ?></td>
+                                    <td><?php echo htmlspecialchars($menuCombination['Price']); ?></td>
+                                    <td>
+                                        <button onclick="editMenuCombination(<?php echo $menuCombination['CombinationID']; ?>)" class="btn btn-warning btn-sm">Edit</button>
+                                        <button onclick="deleteMenuCombination(<?php echo $menuCombination['CombinationID']; ?>)" class="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
 
+        <?php
+        // Handle form submissions for menu management
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Add menu item
+            if (isset($_POST['add_menu_item'])) {
+                $name = $_POST['item_name'];
+                $description = $_POST['item_description'];
+                $price = $_POST['item_price'];
+                $category = $_POST['item_category'];
+                $available = $_POST['item_available'];
 
+                $stmt = $conn->prepare("INSERT INTO menuitems (Name, Description, Price, Category, Available) VALUES (?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssss", $name, $description, $price, $category, $available);
+                $stmt->execute();
+                $stmt->close();
+            }
 
+            // Update menu item
+            elseif (isset($_POST['update_menu_item'])) {
+                $itemID = $_POST['item_id'];
+                $name = $_POST['item_name'];
+                $description = $_POST['item_description'];
+                $price = $_POST['item_price'];
+                $category = $_POST['item_category'];
+                $available = $_POST['item_available'];
 
+                $stmt = $conn->prepare("UPDATE menuitems SET Name = ?, Description = ?, Price = ?, Category = ?, Available = ? WHERE MenuItemID = ?");
+                $stmt->bind_param("sssssi", $name, $description, $price, $category, $available, $itemID);
+                $stmt->execute();
+                $stmt->close();
+            }
 
+            // Delete menu item
+            elseif (isset($_POST['delete_menu_item'])) {
+                $itemID = $_POST['item_id'];
 
-        </div>
+                $stmt = $conn->prepare("DELETE FROM menuitems WHERE MenuItemID = ?");
+                $stmt->bind_param("i", $itemID);
+                $stmt->execute();
+                $stmt->close();
+            }
+
+            // Add menu combination
+            elseif (isset($_POST['add_menu_combination'])) {
+                $name = $_POST['combination_name'];
+                $description = $_POST['combination_description'];
+                $items = $_POST['combination_items'];
+                $price = $_POST['combination_price'];
+
+                $stmt = $conn->prepare("INSERT INTO menu_combinations (Name, Description, Items, Price) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("ssss", $name, $description, $items, $price);
+                $stmt->execute();
+                $stmt->close();
+            }
+
+            // Update menu combination
+            elseif (isset($_POST['update_menu_combination'])) {
+                $combinationID = $_POST['combination_id'];
+                $name = $_POST['combination_name'];
+                $description = $_POST['combination_description'];
+                $items = $_POST['combination_items'];
+                $price = $_POST['combination_price'];
+
+                $stmt = $conn->prepare("UPDATE menu_combinations SET Name = ?, Description = ?, Items = ?, Price = ? WHERE CombinationID = ?");
+                $stmt->bind_param("sssii", $name, $description, $items, $price, $combinationID);
+                $stmt->execute();
+                $stmt->close();
+            }
+
+            // Delete menu combination
+            elseif (isset($_POST['delete_menu_combination'])) {
+                $combinationID = $_POST['combination_id'];
+
+                $stmt = $conn->prepare("DELETE FROM menu_combinations WHERE CombinationID = ?");
+                $stmt->bind_param("i", $combinationID);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
+        ?>
+
         <!-- Edit Staff Modal -->
         <div class="modal fade" id="editStaffModal" tabindex="-1" role="dialog" aria-labelledby="editStaffModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -525,7 +753,7 @@ echo json_encode($data);
                 </div>
             </div>
         </div>
-        
+
         <!-- Inventory Edit Modal -->
         <div class="modal fade" id="editInventoryModal" tabindex="-1" role="dialog" aria-labelledby="editInventoryModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -601,6 +829,98 @@ echo json_encode($data);
                 </div>
             </div>
         </div>
+        <!-- Edit Menu Item Modal -->
+        <div class="modal fade" id="editMenuItemModal" tabindex="-1" role="dialog" aria-labelledby="editMenuItemModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post" action="">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editMenuItemModalLabel">Edit Menu Item</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="item_id" id="edit_item_id">
+                            <div class="form-group">
+                                <label for="edit_item_name">Name</label>
+                                <input type="text" class="form-control" id="edit_item_name" name="item_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_item_description">Description</label>
+                                <textarea class="form-control" id="edit_item_description" name="item_description" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_item_price">Price</label>
+                                <input type="number" step="0.01" class="form-control" id="edit_item_price" name="item_price" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_item_category">Category</label>
+                                <input type="text" class="form-control" id="edit_item_category" name="item_category" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_item_available">Available</label>
+                                <select class="form-control" id="edit_item_available" name="item_available" required>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" name="update_menu_item" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Menu Combination Modal -->
+        <div class="modal fade" id="editMenuCombinationModal" tabindex="-1" role="dialog" aria-labelledby="editMenuCombinationModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post" action="">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editMenuCombinationModalLabel">Edit Menu Combination</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="combination_id" id="edit_combination_id">
+                            <div class="form-group">
+                                <label for="edit_combination_name">Name</label>
+                                <input type="text" class="form-control" id="edit_combination_name" name="combination_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_combination_description">Description</label>
+                                <textarea class="form-control" id="edit_combination_description" name="combination_description" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_combination_items">Items</label>
+                                <textarea class="form-control" id="edit_combination_items" name="combination_items" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_combination_price">Price</label>
+                                <input type="number" step="0.01" class="form-control" id="edit_combination_price" name="combination_price" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" name="update_menu_combination" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
 
     </div>
     <script>
@@ -678,6 +998,8 @@ echo json_encode($data);
                 .catch(error => console.error('Error fetching reservation data:', error));
         }
 
+        
+
         function deleteReservation(reservationID) {
             if (confirm('Are you sure you want to delete this reservation?')) {
                 // Send the delete request
@@ -699,7 +1021,103 @@ echo json_encode($data);
                     .catch(error => console.error('Error deleting reservation:', error));
             }
         }
+
+        function editMenuItem(menuItemID) {
+            // Fetch existing data
+            $.ajax({
+                url: 'get_menu_item.php',
+                type: 'GET',
+                data: {
+                    id: menuItemID
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+
+                    // Populate the form with existing data
+                    $('#edit_item_id').val(data.MenuItemID);
+                    $('#edit_item_name').val(data.Name);
+                    $('#edit_item_description').val(data.Description);
+                    $('#edit_item_price').val(data.Price);
+                    $('#edit_item_category').val(data.Category);
+                    $('#edit_item_available').val(data.Available);
+
+                    // Show the modal
+                    $('#editMenuItemModal').modal('show');
+                }
+            });
+        }
+
+        function deleteMenuItem(menuItemID) {
+            if (confirm("Are you sure you want to delete this menu item?")) {
+                var form = document.createElement("form");
+                form.method = "post";
+                form.action = "";
+
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "delete_menu_item";
+                input.value = "1";
+                form.appendChild(input);
+
+                var idInput = document.createElement("input");
+                idInput.type = "hidden";
+                idInput.name = "item_id";
+                idInput.value = menuItemID;
+                form.appendChild(idInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function editMenuCombination(combinationID) {
+            // Fetch existing data
+            $.ajax({
+                url: 'get_menu_combination.php',
+                type: 'GET',
+                data: {
+                    id: combinationID
+                },
+                success: function(response) {
+                    var data = JSON.parse(response);
+
+                    // Populate the form with existing data
+                    $('#edit_combination_id').val(data.CombinationID);
+                    $('#edit_combination_name').val(data.Name);
+                    $('#edit_combination_description').val(data.Description);
+                    $('#edit_combination_items').val(data.Items);
+                    $('#edit_combination_price').val(data.Price);
+
+                    // Show the modal
+                    $('#editMenuCombinationModal').modal('show');
+                }
+            });
+        }
+
+        function deleteMenuCombination(combinationID) {
+            if (confirm("Are you sure you want to delete this menu combination?")) {
+                var form = document.createElement("form");
+                form.method = "post";
+                form.action = "";
+
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "delete_menu_combination";
+                input.value = "1";
+                form.appendChild(input);
+
+                var idInput = document.createElement("input");
+                idInput.type = "hidden";
+                idInput.name = "combination_id";
+                idInput.value = combinationID;
+                form.appendChild(idInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
     </script>
+
 
 
 
