@@ -150,7 +150,6 @@ $staffResult = $conn->query("SELECT * FROM Staff");
 
 if (isset($_GET['id'])) {
     $inventoryID = $_GET['id'];
-
     $stmt = $conn->prepare("SELECT * FROM inventory WHERE InventoryID = ?");
     $stmt->bind_param("i", $inventoryID);
     $stmt->execute();
@@ -160,7 +159,6 @@ if (isset($_GET['id'])) {
 } else {
     echo json_encode(['error' => 'No ID parameter provided']);
 }
-
 
 // Fetch menu items
 $menuItemsQuery = "SELECT * FROM menuitems";
@@ -582,85 +580,134 @@ if (!$menuCombinationsResult) {
         </div>
 
         <?php
-        // Handle form submissions for menu management
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Add menu item
-            if (isset($_POST['add_menu_item'])) {
-                $name = $_POST['item_name'];
-                $description = $_POST['item_description'];
-                $price = $_POST['item_price'];
-                $category = $_POST['item_category'];
-                $available = $_POST['item_available'];
+// Handle form submissions for menu management
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Add menu item
+    if (isset($_POST['add_menu_item'])) {
+        $name = $_POST['item_name'];
+        $description = $_POST['item_description'];
+        $price = $_POST['item_price'];
+        $category = $_POST['item_category'];
+        $available = $_POST['item_available'];
 
-                $stmt = $conn->prepare("INSERT INTO menuitems (Name, Description, Price, Category, Available) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssss", $name, $description, $price, $category, $available);
-                $stmt->execute();
-                $stmt->close();
+        $stmt = $conn->prepare("INSERT INTO menuitems (Name, Description, Price, Category, Available) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt === false) {
+            error_log("Error preparing statement: " . $conn->error);
+        } else {
+            $stmt->bind_param("sssss", $name, $description, $price, $category, $available);
+            if ($stmt->execute() === false) {
+                error_log("Error executing statement: " . $stmt->error);
+            } else {
+                error_log("Menu item added successfully: " . $name);
             }
-
-            // Update menu item
-            elseif (isset($_POST['update_menu_item'])) {
-                $itemID = $_POST['item_id'];
-                $name = $_POST['item_name'];
-                $description = $_POST['item_description'];
-                $price = $_POST['item_price'];
-                $category = $_POST['item_category'];
-                $available = $_POST['item_available'];
-
-                $stmt = $conn->prepare("UPDATE menuitems SET Name = ?, Description = ?, Price = ?, Category = ?, Available = ? WHERE MenuItemID = ?");
-                $stmt->bind_param("sssssi", $name, $description, $price, $category, $available, $itemID);
-                $stmt->execute();
-                $stmt->close();
-            }
-
-            // Delete menu item
-            elseif (isset($_POST['delete_menu_item'])) {
-                $itemID = $_POST['item_id'];
-
-                $stmt = $conn->prepare("DELETE FROM menuitems WHERE MenuItemID = ?");
-                $stmt->bind_param("i", $itemID);
-                $stmt->execute();
-                $stmt->close();
-            }
-
-            // Add menu combination
-            elseif (isset($_POST['add_menu_combination'])) {
-                $name = $_POST['combination_name'];
-                $description = $_POST['combination_description'];
-                $items = $_POST['combination_items'];
-                $price = $_POST['combination_price'];
-
-                $stmt = $conn->prepare("INSERT INTO menu_combinations (Name, Description, Items, Price) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("ssss", $name, $description, $items, $price);
-                $stmt->execute();
-                $stmt->close();
-            }
-
-            // Update menu combination
-            elseif (isset($_POST['update_menu_combination'])) {
-                $combinationID = $_POST['combination_id'];
-                $name = $_POST['combination_name'];
-                $description = $_POST['combination_description'];
-                $items = $_POST['combination_items'];
-                $price = $_POST['combination_price'];
-
-                $stmt = $conn->prepare("UPDATE menu_combinations SET Name = ?, Description = ?, Items = ?, Price = ? WHERE CombinationID = ?");
-                $stmt->bind_param("sssii", $name, $description, $items, $price, $combinationID);
-                $stmt->execute();
-                $stmt->close();
-            }
-
-            // Delete menu combination
-            elseif (isset($_POST['delete_menu_combination'])) {
-                $combinationID = $_POST['combination_id'];
-
-                $stmt = $conn->prepare("DELETE FROM menu_combinations WHERE CombinationID = ?");
-                $stmt->bind_param("i", $combinationID);
-                $stmt->execute();
-                $stmt->close();
-            }
+            $stmt->close();
         }
-        ?>
+    }
+
+    // Update menu item
+    elseif (isset($_POST['update_menu_item'])) {
+        $itemID = $_POST['item_id'];
+        $name = $_POST['item_name'];
+        $description = $_POST['item_description'];
+        $price = $_POST['item_price'];
+        $category = $_POST['item_category'];
+        $available = $_POST['item_available'];
+
+        $stmt = $conn->prepare("UPDATE menuitems SET Name = ?, Description = ?, Price = ?, Category = ?, Available = ? WHERE MenuItemID = ?");
+        if ($stmt === false) {
+            error_log("Error preparing statement: " . $conn->error);
+        } else {
+            $stmt->bind_param("sssssi", $name, $description, $price, $category, $available, $itemID);
+            if ($stmt->execute() === false) {
+                error_log("Error executing statement: " . $stmt->error);
+            } else {
+                error_log("Menu item updated successfully: " . $name);
+            }
+            $stmt->close();
+        }
+    }
+
+    // Delete menu item
+    elseif (isset($_POST['delete_menu_item'])) {
+        $itemID = $_POST['item_id'];
+
+        $stmt = $conn->prepare("DELETE FROM menuitems WHERE MenuItemID = ?");
+        if ($stmt === false) {
+            error_log("Error preparing statement: " . $conn->error);
+        } else {
+            $stmt->bind_param("i", $itemID);
+            if ($stmt->execute() === false) {
+                error_log("Error executing statement: " . $stmt->error);
+            } else {
+                error_log("Menu item deleted successfully: " . $itemID);
+            }
+            $stmt->close();
+        }
+    }
+
+    // Add menu combination
+    elseif (isset($_POST['add_menu_combination'])) {
+        $name = $_POST['combination_name'];
+        $description = $_POST['combination_description'];
+        $items = $_POST['combination_items'];
+        $price = $_POST['combination_price'];
+
+        $stmt = $conn->prepare("INSERT INTO menu_combinations (Name, Description, Items, Price) VALUES (?, ?, ?, ?)");
+        if ($stmt === false) {
+            error_log("Error preparing statement: " . $conn->error);
+        } else {
+            $stmt->bind_param("ssss", $name, $description, $items, $price);
+            if ($stmt->execute() === false) {
+                error_log("Error executing statement: " . $stmt->error);
+            } else {
+                error_log("Menu combination added successfully: " . $name);
+            }
+            $stmt->close();
+        }
+    }
+
+    // Update menu combination
+    elseif (isset($_POST['update_menu_combination'])) {
+        $combinationID = $_POST['combination_id'];
+        $name = $_POST['combination_name'];
+        $description = $_POST['combination_description'];
+        $items = $_POST['combination_items'];
+        $price = $_POST['combination_price'];
+
+        $stmt = $conn->prepare("UPDATE menu_combinations SET Name = ?, Description = ?, Items = ?, Price = ? WHERE CombinationID = ?");
+        if ($stmt === false) {
+            error_log("Error preparing statement: " . $conn->error);
+        } else {
+            $stmt->bind_param("sssii", $name, $description, $items, $price, $combinationID);
+            if ($stmt->execute() === false) {
+                error_log("Error executing statement: " . $stmt->error);
+            } else {
+                error_log("Menu combination updated successfully: " . $name);
+            }
+            $stmt->close();
+        }
+    }
+
+    // Delete menu combination
+    elseif (isset($_POST['delete_menu_combination'])) {
+        $combinationID = $_POST['combination_id'];
+
+        $stmt = $conn->prepare("DELETE FROM menu_combinations WHERE CombinationID = ?");
+        if ($stmt === false) {
+            error_log("Error preparing statement: " . $conn->error);
+        } else {
+            $stmt->bind_param("i", $combinationID);
+            if ($stmt->execute() === false) {
+                error_log("Error executing statement: " . $stmt->error);
+            } else {
+                error_log("Menu combination deleted successfully: " . $combinationID);
+            }
+            $stmt->close();
+        }
+    }
+}
+?>
+
 
         <!-- Edit Staff Modal -->
         <div class="modal fade" id="editStaffModal" tabindex="-1" role="dialog" aria-labelledby="editStaffModalLabel" aria-hidden="true">
@@ -945,19 +992,29 @@ if (!$menuCombinationsResult) {
         }
 
         function editInventory(inventoryID) {
+            // Construct the URL with the inventory ID
+            const url = 'get_inventory.php?id=' + inventoryID;
+            console.log('Fetching URL:', url);
+
             // Fetch the current data for the inventory item
-            fetch('get_inventory.php?id=' + inventoryID)
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    // Populate the form with current data
-                    document.getElementById('edit_inventory_id').value = data.InventoryID;
-                    document.getElementById('edit_menu_item').value = data.MenuItemID;
-                    document.getElementById('edit_quantity').value = data.Quantity;
-                    // Show the modal or form for editing
-                    $('#editInventoryModal').modal('show');
+                    console.log('Fetched Data:', data);
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        // Populate the form with current data
+                        document.getElementById('edit_inventory_id').value = data.InventoryID;
+                        document.getElementById('edit_menu_item').value = data.MenuItemID;
+                        document.getElementById('edit_quantity').value = data.Quantity;
+                        // Show the modal for editing
+                        $('#editInventoryModal').modal('show');
+                    }
                 })
                 .catch(error => console.error('Error fetching inventory data:', error));
         }
+
 
         function deleteInventory(inventoryID) {
             if (confirm('Are you sure you want to delete this inventory item?')) {
@@ -998,7 +1055,7 @@ if (!$menuCombinationsResult) {
                 .catch(error => console.error('Error fetching reservation data:', error));
         }
 
-        
+
 
         function deleteReservation(reservationID) {
             if (confirm('Are you sure you want to delete this reservation?')) {
@@ -1081,15 +1138,18 @@ if (!$menuCombinationsResult) {
                 success: function(response) {
                     var data = JSON.parse(response);
 
-                    // Populate the form with existing data
-                    $('#edit_combination_id').val(data.CombinationID);
-                    $('#edit_combination_name').val(data.Name);
-                    $('#edit_combination_description').val(data.Description);
-                    $('#edit_combination_items').val(data.Items);
-                    $('#edit_combination_price').val(data.Price);
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        // Populate the form with existing data
+                        $('#edit_combination_id').val(data.CombinationID);
+                        $('#edit_combination_name').val(data.Name);
+                        $('#edit_combination_description').val(data.Description);
+                        $('#edit_combination_price').val(data.Price);
 
-                    // Show the modal
-                    $('#editMenuCombinationModal').modal('show');
+                        // Show the modal
+                        $('#editMenuCombinationModal').modal('show');
+                    }
                 }
             });
         }

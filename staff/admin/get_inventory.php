@@ -1,9 +1,8 @@
 <?php
-include '../config.php'; // Make sure this path is correct
+include '../config.php'; // Ensure this path is correct
 
 if (isset($_GET['id'])) {
     $inventoryID = $_GET['id'];
-
     $stmt = $conn->prepare("SELECT * FROM inventory WHERE InventoryID = ?");
     $stmt->bind_param("i", $inventoryID);
     $stmt->execute();
