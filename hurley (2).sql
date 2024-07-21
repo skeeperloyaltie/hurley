@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2024 at 01:49 PM
+-- Generation Time: Jul 21, 2024 at 03:01 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -48,11 +48,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`CustomerID`, `FirstName`, `LastName`, `Email`, `Username`, `Password`, `PhoneNumber`, `Address`, `City`, `State`, `ZipCode`, `RegistrationDate`, `role`) VALUES
-(1, 'Skeeper', 'Loyaltie', 'skeepertech@gmail.com', 'skeeperloyaltie', '$2y$10$8fjyJ/o9UR6yPugneBLJxujs8Bjc6XvDwtJCeb8WXlCHK.ep/ZgHq', '0702940509', '154 00625', 'Add', 'cxzczx', '2121', '2024-07-19 11:22:52', ''),
-(3, 'Skeeper', 'Loyaltie', 'skeepertec1h@gmail.com1', 'freak', '$2y$10$jsxwhGKadPBimxaetp3fZu/XGuu4yJCMxDg.c0q.wLNkYhGqzudhq', '0702940509', '154 00625', 'Add', 'cxzczx', '2121', '2024-07-19 11:25:56', ''),
-(4, 'Skeeper', 'Loyaltie', 'skeepertec11h@gmail.com1', 'freak1', '$2y$10$la1LvjW2/ekKqLsIu7LhVetlnQjb4vho14GmHZh2xI/GpWcc3usQ6', '0702940509', '154 00625', 'Add', 'cxzczx', '2121', '2024-07-19 11:34:52', 'customer'),
-(6, 'Skeeper', 'Loyaltie', 'skeepertec111h@gmail.com1', 'freak11', '$2y$10$pekTo9BsWica9WEh6ErI8ulCqhqIVFTb19GT5.TL.t88Xe7zUIuvS', '0702940509', '154 00625', 'Add', 'cxzczx', '2121', '2024-07-19 11:52:23', 'customer'),
-(7, 'freaks', 'loyal', 'freakloyal@gmail.com', 'freaks', '$2y$10$vSSNVvlMT245IInu5vkAQ.Tk7.S/5Q89oyREycCUmWbCZZkCM6WIW', '07273232', '234234hhhd', 'dsfsdfsd', 'sdfsdfsd', '123', '2024-07-19 12:11:33', 'customer');
+(1, 'Skeeper', 'Loyaltie', 'skeepertech@gmail.com', 'skeepertech@gmail.com', '$2y$10$4izxi9v9HtYnKf2pzsmU9es7U4tEV69SKuQ8Zs8k9FXEYD.ndy49G', '0702940509', '154 00625', 'Add', 'nasjaks', '2121', '2024-07-21 00:38:09', 'customer');
 
 -- --------------------------------------------------------
 
@@ -215,10 +211,7 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`StaffID`, `FirstName`, `LastName`, `Username`, `Role`, `Email`, `PhoneNumber`, `HireDate`, `Password`, `IsBlacklisted`) VALUES
-(1, 'Admin', 'User', 'admin', 'Admin', 'admin@example.com', '1234567890', '2024-07-19 23:02:05', '$2y$10$1asKaMgA.IzUoYOQRaUWEuZrSNpsbfIve4w.Ksn3P6yzu3ZQOQFmO', 0),
-(5, 'Skeeper', 'Loyaltie', 'skeepertech@gmail.com', '', 'Cook', '0702940509', '2024-07-19 23:27:55', '$2y$10$sZsAIkMYvkrjeX0xr.YmmuBwoXb5E8E4OF/qBDhiShemol0F9dqKS', 1),
-(8, 'Skeeper', 'Loyaltie', 'freaks', 'Manager', 'skeepertec232323h@gmail.com', '0702940509', '2024-07-19 23:46:32', '$2y$10$YIT3K4Rpygl91TynMVAY2uCN2qA11jLR32x65NKWDqMYsDNDVqVei', 0),
-(10, 'Skeeper', 'Loyaltie', 'skeeper@example.com', 'Manager', 'skeepertech@gmail.com', '0702940509', '2024-07-20 01:32:31', '$2y$10$CRHURPZBK1GyLPLrz06Z0u8hnlmZwkK9jkj0uM25whnThM.3.FFui', 0);
+(1, 'Admin', 'User', 'admin', 'Admin', 'admin@example.com', '1234567890', '2024-07-19 23:02:05', '$2y$10$1asKaMgA.IzUoYOQRaUWEuZrSNpsbfIve4w.Ksn3P6yzu3ZQOQFmO', 0);
 
 -- --------------------------------------------------------
 
@@ -313,6 +306,12 @@ ALTER TABLE `staff`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `menu_combinations`

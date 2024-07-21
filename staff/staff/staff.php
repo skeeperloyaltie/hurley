@@ -187,10 +187,10 @@ $salesResult = null;
                 <a class="nav-link" data-toggle="pill" href="#reports">Reports</a>
             </li>
             <div style="float:right;" class="mb-4">
-            <a href="../admin/logout.php" class="btn btn-danger">Logout</a>
-        </div>
+                <a href="../admin/logout.php" class="btn btn-danger">Logout</a>
+            </div>
         </ul>
-       
+
         <div class="tab-content">
             <!-- Reservations Section -->
             <div id="reservation_section" class="tab-pane fade show active">
@@ -414,7 +414,7 @@ $salesResult = null;
                     <button type="submit" name="view_sales_report" class="btn btn-primary">View Sales Report</button>
                 </form>
 
-                <?php if ($salesResult): ?>
+                <?php if ($salesResult) : ?>
                     <h4 class="mt-4">Sales Report</h4>
                     <table class="table table-bordered">
                         <thead>
@@ -440,4 +440,5 @@ $salesResult = null;
         </div>
     </div>
 </body>
+
 </html>

@@ -198,7 +198,7 @@ if (!$menuCombinationsResult) {
 <body>
     <div class="container mt-5">
         <h2 class="text-center mb-4">Admin Dashboard</h2>
-        
+
 
         <!-- Navigation -->
         <ul class="nav nav-pills mb-4">
@@ -221,8 +221,8 @@ if (!$menuCombinationsResult) {
                 <a class="nav-link" data-toggle="pill" href="#menu_management_section">Menu Management</a>
             </li>
             <div style="float:right;" class="mb-4">
-            <a href="logout.php" class="btn btn-danger">Logout</a>
-        </div>
+                <a href="logout.php" class="btn btn-danger">Logout</a>
+            </div>
         </ul>
 
 
@@ -584,133 +584,133 @@ if (!$menuCombinationsResult) {
         </div>
 
         <?php
-// Handle form submissions for menu management
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Add menu item
-    if (isset($_POST['add_menu_item'])) {
-        $name = $_POST['item_name'];
-        $description = $_POST['item_description'];
-        $price = $_POST['item_price'];
-        $category = $_POST['item_category'];
-        $available = $_POST['item_available'];
+        // Handle form submissions for menu management
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Add menu item
+            if (isset($_POST['add_menu_item'])) {
+                $name = $_POST['item_name'];
+                $description = $_POST['item_description'];
+                $price = $_POST['item_price'];
+                $category = $_POST['item_category'];
+                $available = $_POST['item_available'];
 
-        $stmt = $conn->prepare("INSERT INTO menuitems (Name, Description, Price, Category, Available) VALUES (?, ?, ?, ?, ?)");
-        if ($stmt === false) {
-            error_log("Error preparing statement: " . $conn->error);
-        } else {
-            $stmt->bind_param("sssss", $name, $description, $price, $category, $available);
-            if ($stmt->execute() === false) {
-                error_log("Error executing statement: " . $stmt->error);
-            } else {
-                error_log("Menu item added successfully: " . $name);
+                $stmt = $conn->prepare("INSERT INTO menuitems (Name, Description, Price, Category, Available) VALUES (?, ?, ?, ?, ?)");
+                if ($stmt === false) {
+                    error_log("Error preparing statement: " . $conn->error);
+                } else {
+                    $stmt->bind_param("sssss", $name, $description, $price, $category, $available);
+                    if ($stmt->execute() === false) {
+                        error_log("Error executing statement: " . $stmt->error);
+                    } else {
+                        error_log("Menu item added successfully: " . $name);
+                    }
+                    $stmt->close();
+                }
             }
-            $stmt->close();
-        }
-    }
 
-    // Update menu item
-    elseif (isset($_POST['update_menu_item'])) {
-        $itemID = $_POST['item_id'];
-        $name = $_POST['item_name'];
-        $description = $_POST['item_description'];
-        $price = $_POST['item_price'];
-        $category = $_POST['item_category'];
-        $available = $_POST['item_available'];
+            // Update menu item
+            elseif (isset($_POST['update_menu_item'])) {
+                $itemID = $_POST['item_id'];
+                $name = $_POST['item_name'];
+                $description = $_POST['item_description'];
+                $price = $_POST['item_price'];
+                $category = $_POST['item_category'];
+                $available = $_POST['item_available'];
 
-        $stmt = $conn->prepare("UPDATE menuitems SET Name = ?, Description = ?, Price = ?, Category = ?, Available = ? WHERE MenuItemID = ?");
-        if ($stmt === false) {
-            error_log("Error preparing statement: " . $conn->error);
-        } else {
-            $stmt->bind_param("sssssi", $name, $description, $price, $category, $available, $itemID);
-            if ($stmt->execute() === false) {
-                error_log("Error executing statement: " . $stmt->error);
-            } else {
-                error_log("Menu item updated successfully: " . $name);
+                $stmt = $conn->prepare("UPDATE menuitems SET Name = ?, Description = ?, Price = ?, Category = ?, Available = ? WHERE MenuItemID = ?");
+                if ($stmt === false) {
+                    error_log("Error preparing statement: " . $conn->error);
+                } else {
+                    $stmt->bind_param("sssssi", $name, $description, $price, $category, $available, $itemID);
+                    if ($stmt->execute() === false) {
+                        error_log("Error executing statement: " . $stmt->error);
+                    } else {
+                        error_log("Menu item updated successfully: " . $name);
+                    }
+                    $stmt->close();
+                }
             }
-            $stmt->close();
-        }
-    }
 
-    // Delete menu item
-    elseif (isset($_POST['delete_menu_item'])) {
-        $itemID = $_POST['item_id'];
+            // Delete menu item
+            elseif (isset($_POST['delete_menu_item'])) {
+                $itemID = $_POST['item_id'];
 
-        $stmt = $conn->prepare("DELETE FROM menuitems WHERE MenuItemID = ?");
-        if ($stmt === false) {
-            error_log("Error preparing statement: " . $conn->error);
-        } else {
-            $stmt->bind_param("i", $itemID);
-            if ($stmt->execute() === false) {
-                error_log("Error executing statement: " . $stmt->error);
-            } else {
-                error_log("Menu item deleted successfully: " . $itemID);
+                $stmt = $conn->prepare("DELETE FROM menuitems WHERE MenuItemID = ?");
+                if ($stmt === false) {
+                    error_log("Error preparing statement: " . $conn->error);
+                } else {
+                    $stmt->bind_param("i", $itemID);
+                    if ($stmt->execute() === false) {
+                        error_log("Error executing statement: " . $stmt->error);
+                    } else {
+                        error_log("Menu item deleted successfully: " . $itemID);
+                    }
+                    $stmt->close();
+                }
             }
-            $stmt->close();
-        }
-    }
 
-    // Add menu combination
-    elseif (isset($_POST['add_menu_combination'])) {
-        $name = $_POST['combination_name'];
-        $description = $_POST['combination_description'];
-        $items = $_POST['combination_items'];
-        $price = $_POST['combination_price'];
+            // Add menu combination
+            elseif (isset($_POST['add_menu_combination'])) {
+                $name = $_POST['combination_name'];
+                $description = $_POST['combination_description'];
+                $items = $_POST['combination_items'];
+                $price = $_POST['combination_price'];
 
-        $stmt = $conn->prepare("INSERT INTO menu_combinations (Name, Description, Items, Price) VALUES (?, ?, ?, ?)");
-        if ($stmt === false) {
-            error_log("Error preparing statement: " . $conn->error);
-        } else {
-            $stmt->bind_param("ssss", $name, $description, $items, $price);
-            if ($stmt->execute() === false) {
-                error_log("Error executing statement: " . $stmt->error);
-            } else {
-                error_log("Menu combination added successfully: " . $name);
+                $stmt = $conn->prepare("INSERT INTO menu_combinations (Name, Description, Items, Price) VALUES (?, ?, ?, ?)");
+                if ($stmt === false) {
+                    error_log("Error preparing statement: " . $conn->error);
+                } else {
+                    $stmt->bind_param("ssss", $name, $description, $items, $price);
+                    if ($stmt->execute() === false) {
+                        error_log("Error executing statement: " . $stmt->error);
+                    } else {
+                        error_log("Menu combination added successfully: " . $name);
+                    }
+                    $stmt->close();
+                }
             }
-            $stmt->close();
-        }
-    }
 
-    // Update menu combination
-    elseif (isset($_POST['update_menu_combination'])) {
-        $combinationID = $_POST['combination_id'];
-        $name = $_POST['combination_name'];
-        $description = $_POST['combination_description'];
-        $items = $_POST['combination_items'];
-        $price = $_POST['combination_price'];
+            // Update menu combination
+            elseif (isset($_POST['update_menu_combination'])) {
+                $combinationID = $_POST['combination_id'];
+                $name = $_POST['combination_name'];
+                $description = $_POST['combination_description'];
+                $items = $_POST['combination_items'];
+                $price = $_POST['combination_price'];
 
-        $stmt = $conn->prepare("UPDATE menu_combinations SET Name = ?, Description = ?, Items = ?, Price = ? WHERE CombinationID = ?");
-        if ($stmt === false) {
-            error_log("Error preparing statement: " . $conn->error);
-        } else {
-            $stmt->bind_param("sssii", $name, $description, $items, $price, $combinationID);
-            if ($stmt->execute() === false) {
-                error_log("Error executing statement: " . $stmt->error);
-            } else {
-                error_log("Menu combination updated successfully: " . $name);
+                $stmt = $conn->prepare("UPDATE menu_combinations SET Name = ?, Description = ?, Items = ?, Price = ? WHERE CombinationID = ?");
+                if ($stmt === false) {
+                    error_log("Error preparing statement: " . $conn->error);
+                } else {
+                    $stmt->bind_param("sssii", $name, $description, $items, $price, $combinationID);
+                    if ($stmt->execute() === false) {
+                        error_log("Error executing statement: " . $stmt->error);
+                    } else {
+                        error_log("Menu combination updated successfully: " . $name);
+                    }
+                    $stmt->close();
+                }
             }
-            $stmt->close();
-        }
-    }
 
-    // Delete menu combination
-    elseif (isset($_POST['delete_menu_combination'])) {
-        $combinationID = $_POST['combination_id'];
+            // Delete menu combination
+            elseif (isset($_POST['delete_menu_combination'])) {
+                $combinationID = $_POST['combination_id'];
 
-        $stmt = $conn->prepare("DELETE FROM menu_combinations WHERE CombinationID = ?");
-        if ($stmt === false) {
-            error_log("Error preparing statement: " . $conn->error);
-        } else {
-            $stmt->bind_param("i", $combinationID);
-            if ($stmt->execute() === false) {
-                error_log("Error executing statement: " . $stmt->error);
-            } else {
-                error_log("Menu combination deleted successfully: " . $combinationID);
+                $stmt = $conn->prepare("DELETE FROM menu_combinations WHERE CombinationID = ?");
+                if ($stmt === false) {
+                    error_log("Error preparing statement: " . $conn->error);
+                } else {
+                    $stmt->bind_param("i", $combinationID);
+                    if ($stmt->execute() === false) {
+                        error_log("Error executing statement: " . $stmt->error);
+                    } else {
+                        error_log("Menu combination deleted successfully: " . $combinationID);
+                    }
+                    $stmt->close();
+                }
             }
-            $stmt->close();
         }
-    }
-}
-?>
+        ?>
 
 
         <!-- Edit Staff Modal -->
