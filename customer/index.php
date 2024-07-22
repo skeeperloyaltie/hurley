@@ -134,12 +134,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch menu items
-$menuItemsQuery = "SELECT MenuItemID, Name, Price FROM menuitems";
+$menuItemsQuery = "SELECT * FROM menuitems";
 $menuItemsResult = $mysqli->query($menuItemsQuery);
-
-if ($menuItemsResult === false) {
-    die("Error executing query: " . $mysqli->error);
-}
 
 // Fetch reservations
 $reservationsQuery = "SELECT * FROM reservations WHERE CustomerID = ?";
@@ -162,6 +158,7 @@ if ($ordersStmt) {
 } else {
     echo "Error preparing statement: " . $mysqli->error;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -218,7 +215,7 @@ if ($ordersStmt) {
                 <ul class="list-group">
                     <?php while ($reservation = $reservationsResult->fetch_assoc()): ?>
                         <li class="list-group-item">
-                            Reservation ID: <?= $reservation['ReservationID']; ?> | Number of Guests: <?= $reservation['NumberOfGuests']; ?> | Special Requests: <?= $reservation['SpecialRequests']; ?>
+                            Guests: <?= $reservation['NumberOfGuests']; ?> | Special Requests: <?= $reservation['SpecialRequests']; ?>
                         </li>
                     <?php endwhile; ?>
                 </ul>
@@ -235,7 +232,7 @@ if ($ordersStmt) {
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="<?= $menuItem['MenuItemID']; ?>" name="menu_item_id[]">
                                     <label class="form-check-label">
-                                        <?= htmlspecialchars($menuItem['Name']); ?> - $<?= number_format($menuItem['Price'], 2); ?>
+                                        <?= $menuItem['ItemName']; ?> - $<?= $menuItem['Price']; ?>
                                     </label>
                                     <input type="number" class="form-control mt-2" name="quantity[]" placeholder="Quantity">
                                 </div>
@@ -264,7 +261,7 @@ if ($ordersStmt) {
                     </div>
                     <div class="form-group">
                         <label for="amount">Amount</label>
-                        <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+                        <input type="number" class="form-control" id="amount" name="amount" required>
                     </div>
                     <div class="form-group">
                         <label for="payment_method">Payment Method</label>
@@ -281,8 +278,7 @@ if ($ordersStmt) {
             <!-- Profile Section -->
             <div id="profile_section" class="tab-pane fade">
                 <h3>My Profile</h3>
-                <p>Customer ID: <?= $customerID; ?></p>
-                <!-- Additional profile details can be added here -->
+                <!-- Profile details can be shown here -->
             </div>
         </div>
     </div>
@@ -290,9 +286,8 @@ if ($ordersStmt) {
     <script>
         $(document).ready(function () {
             // Handle reservation form submission
-            $('#reservation_form').submit(function (e) {
+            $('#reservation_form').on('submit', function (e) {
                 e.preventDefault();
-
                 $.ajax({
                     type: 'POST',
                     url: '',
@@ -307,17 +302,13 @@ if ($ordersStmt) {
                         } else {
                             toastr.error(response.message);
                         }
-                    },
-                    error: function () {
-                        toastr.error('An error occurred.');
                     }
                 });
             });
 
             // Handle order form submission
-            $('#order_form').submit(function (e) {
+            $('#order_form').on('submit', function (e) {
                 e.preventDefault();
-
                 $.ajax({
                     type: 'POST',
                     url: '',
@@ -332,17 +323,13 @@ if ($ordersStmt) {
                         } else {
                             toastr.error(response.message);
                         }
-                    },
-                    error: function () {
-                        toastr.error('An error occurred.');
                     }
                 });
             });
 
             // Handle payment form submission
-            $('#payment_form').submit(function (e) {
+            $('#payment_form').on('submit', function (e) {
                 e.preventDefault();
-
                 $.ajax({
                     type: 'POST',
                     url: '',
@@ -357,9 +344,6 @@ if ($ordersStmt) {
                         } else {
                             toastr.error(response.message);
                         }
-                    },
-                    error: function () {
-                        toastr.error('An error occurred.');
                     }
                 });
             });
