@@ -3,13 +3,14 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2024 at 11:29 PM
+-- Generation Time: Jul 22, 2024 at 11:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `customers` (
-  `CustomerID` int(11) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(11) NOT NULL,
   `FirstName` varchar(50) NOT NULL,
   `LastName` varchar(50) NOT NULL,
   `Email` varchar(100) NOT NULL,
@@ -39,10 +40,7 @@ CREATE TABLE `customers` (
   `State` varchar(50) DEFAULT NULL,
   `ZipCode` varchar(10) DEFAULT NULL,
   `RegistrationDate` timestamp NOT NULL DEFAULT current_timestamp(),
-  `role` varchar(255) NOT NULL,
-  PRIMARY KEY (`CustomerID`),
-  UNIQUE KEY `Email` (`Email`),
-  UNIQUE KEY `Username` (`Username`)
+  `role` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -61,13 +59,11 @@ INSERT INTO `customers` (`CustomerID`, `FirstName`, `LastName`, `Email`, `Userna
 --
 
 CREATE TABLE `feedback` (
-  `FeedbackID` int(11) NOT NULL AUTO_INCREMENT,
+  `FeedbackID` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL,
   `FeedbackDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `Comments` text DEFAULT NULL,
-  `Rating` int(11) DEFAULT NULL CHECK (`Rating` >= 1 and `Rating` <= 5),
-  PRIMARY KEY (`FeedbackID`),
-  KEY `CustomerID` (`CustomerID`)
+  `Rating` int(11) DEFAULT NULL CHECK (`Rating` >= 1 and `Rating` <= 5)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -77,13 +73,20 @@ CREATE TABLE `feedback` (
 --
 
 CREATE TABLE `inventory` (
-  `InventoryID` int(11) NOT NULL AUTO_INCREMENT,
+  `InventoryID` int(11) NOT NULL,
   `MenuItemID` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
-  `LastUpdated` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`InventoryID`),
-  KEY `MenuItemID` (`MenuItemID`)
+  `LastUpdated` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inventory`
+--
+
+INSERT INTO `inventory` (`InventoryID`, `MenuItemID`, `Quantity`, `LastUpdated`) VALUES
+(1, 2, 21, '2024-07-22 21:55:19'),
+(2, 1, 33, '2024-07-22 21:55:29'),
+(3, 1, 33, '2024-07-22 21:55:34');
 
 -- --------------------------------------------------------
 
@@ -92,13 +95,12 @@ CREATE TABLE `inventory` (
 --
 
 CREATE TABLE `menuitems` (
-  `MenuItemID` int(11) NOT NULL AUTO_INCREMENT,
+  `MenuItemID` int(11) NOT NULL,
   `Name` varchar(100) NOT NULL,
   `Description` text DEFAULT NULL,
   `Price` decimal(10,2) NOT NULL,
   `Category` varchar(50) DEFAULT NULL,
-  `Available` tinyint(1) DEFAULT 1,
-  PRIMARY KEY (`MenuItemID`)
+  `Available` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -106,7 +108,9 @@ CREATE TABLE `menuitems` (
 --
 
 INSERT INTO `menuitems` (`MenuItemID`, `Name`, `Description`, `Price`, `Category`, `Available`) VALUES
-(1, 'Mandazi', 'Mandazi - breakfast', 150.00, 'Breakfast', 1);
+(1, 'Mandazi', 'Mandazi - breakfast', 150.00, 'Breakfast', 1),
+(2, 'Stew', 'sgasga', 321.00, 'Dinner', 1),
+(3, 'Stew', 'sgasga', 321.00, 'Dinner', 1);
 
 -- --------------------------------------------------------
 
@@ -115,12 +119,11 @@ INSERT INTO `menuitems` (`MenuItemID`, `Name`, `Description`, `Price`, `Category
 --
 
 CREATE TABLE `menu_combinations` (
-  `CombinationID` int(11) NOT NULL AUTO_INCREMENT,
+  `CombinationID` int(11) NOT NULL,
   `Name` varchar(100) NOT NULL,
   `Description` text DEFAULT NULL,
   `Items` text NOT NULL,
-  `Price` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`CombinationID`)
+  `Price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -130,15 +133,21 @@ CREATE TABLE `menu_combinations` (
 --
 
 CREATE TABLE `orderitems` (
-  `OrderItemID` int(11) NOT NULL AUTO_INCREMENT,
+  `OrderItemID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
   `MenuItemID` int(11) NOT NULL,
   `Quantity` int(11) NOT NULL,
-  `Price` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`OrderItemID`),
-  KEY `OrderID` (`OrderID`),
-  KEY `MenuItemID` (`MenuItemID`)
+  `Price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orderitems`
+--
+
+INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `MenuItemID`, `Quantity`, `Price`) VALUES
+(1, 2, 1, 32, 150.00),
+(2, 3, 1, 32, 150.00),
+(3, 4, 1, 12, 150.00);
 
 -- --------------------------------------------------------
 
@@ -147,15 +156,12 @@ CREATE TABLE `orderitems` (
 --
 
 CREATE TABLE `orders` (
-  `OrderID` int(11) NOT NULL AUTO_INCREMENT,
+  `OrderID` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL,
   `OrderDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `StaffID` int(11) DEFAULT NULL,
   `TotalAmount` decimal(10,2) NOT NULL,
-  `Status` varchar(50) DEFAULT 'Pending',
-  PRIMARY KEY (`OrderID`),
-  KEY `CustomerID` (`CustomerID`),
-  KEY `StaffID` (`StaffID`)
+  `Status` varchar(50) DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -163,7 +169,10 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`OrderID`, `CustomerID`, `OrderDate`, `StaffID`, `TotalAmount`, `Status`) VALUES
-(1, 1, '2024-07-22 11:51:55', NULL, 188.79, 'Paid');
+(1, 1, '2024-07-22 11:51:55', NULL, 188.79, 'Paid'),
+(2, 11, '2024-07-22 21:40:29', NULL, 4800.00, 'Pending'),
+(3, 11, '2024-07-22 21:42:54', NULL, 4800.00, 'Pending'),
+(4, 11, '2024-07-22 21:43:09', NULL, 1800.00, 'Paid');
 
 -- --------------------------------------------------------
 
@@ -172,14 +181,12 @@ INSERT INTO `orders` (`OrderID`, `CustomerID`, `OrderDate`, `StaffID`, `TotalAmo
 --
 
 CREATE TABLE `payments` (
-  `PaymentID` int(11) NOT NULL AUTO_INCREMENT,
+  `PaymentID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
   `PaymentDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `Amount` decimal(10,2) NOT NULL,
   `PaymentMethod` varchar(50) DEFAULT NULL,
-  `TransactionID` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`PaymentID`),
-  KEY `OrderID` (`OrderID`)
+  `TransactionID` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -187,7 +194,9 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`PaymentID`, `OrderID`, `PaymentDate`, `Amount`, `PaymentMethod`, `TransactionID`) VALUES
-(1, 1, '2024-07-22 12:03:59', 1233.00, 'Debit Card', '12ASASSA');
+(1, 1, '2024-07-22 12:03:59', 1233.00, 'Debit Card', '12ASASSA'),
+(2, 4, '2024-07-22 21:43:52', 1800.00, 'Banks', '12ssasa'),
+(3, 4, '2024-07-22 21:44:45', 1800.00, 'Banks', '12ssasa');
 
 -- --------------------------------------------------------
 
@@ -196,15 +205,22 @@ INSERT INTO `payments` (`PaymentID`, `OrderID`, `PaymentDate`, `Amount`, `Paymen
 --
 
 CREATE TABLE `reservations` (
-  `ReservationID` int(11) NOT NULL AUTO_INCREMENT,
+  `ReservationID` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL,
   `ReservationDate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `NumberOfGuests` int(11) NOT NULL,
   `SpecialRequests` text DEFAULT NULL,
-  `Status` varchar(50) DEFAULT 'Pending',
-  PRIMARY KEY (`ReservationID`),
-  KEY `CustomerID` (`CustomerID`)
+  `Status` varchar(50) DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`ReservationID`, `CustomerID`, `ReservationDate`, `NumberOfGuests`, `SpecialRequests`, `Status`) VALUES
+(1, 11, '2024-07-22 21:52:41', 21, '2333', 'Confirmed'),
+(2, 11, '2024-07-22 21:36:58', 43, 'fhg', 'Pending'),
+(3, 1, '2024-07-22 21:53:35', 12, 'Nothing', 'Confirmed');
 
 -- --------------------------------------------------------
 
@@ -213,7 +229,7 @@ CREATE TABLE `reservations` (
 --
 
 CREATE TABLE `staff` (
-  `StaffID` int(11) NOT NULL AUTO_INCREMENT,
+  `StaffID` int(11) NOT NULL,
   `FirstName` varchar(50) NOT NULL,
   `LastName` varchar(50) NOT NULL,
   `Username` varchar(30) NOT NULL,
@@ -222,8 +238,7 @@ CREATE TABLE `staff` (
   `PhoneNumber` varchar(15) DEFAULT NULL,
   `HireDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `Password` varchar(255) NOT NULL,
-  `IsBlacklisted` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`StaffID`)
+  `IsBlacklisted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -243,17 +258,165 @@ INSERT INTO `staff` (`StaffID`, `FirstName`, `LastName`, `Username`, `Role`, `Em
 --
 
 CREATE TABLE `transactions` (
-  `TransactionID` int(11) NOT NULL AUTO_INCREMENT,
+  `TransactionID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
   `StaffID` int(11) NOT NULL,
   `TransactionDate` timestamp NOT NULL DEFAULT current_timestamp(),
   `TransactionAmount` decimal(10,2) NOT NULL,
-  `TransactionType` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`TransactionID`),
-  KEY `OrderID` (`OrderID`),
-  KEY `StaffID` (`StaffID`)
+  `TransactionType` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`CustomerID`),
+  ADD UNIQUE KEY `Email` (`Email`),
+  ADD UNIQUE KEY `Username` (`Username`);
+
+--
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`FeedbackID`),
+  ADD KEY `CustomerID` (`CustomerID`);
+
+--
+-- Indexes for table `inventory`
+--
+ALTER TABLE `inventory`
+  ADD PRIMARY KEY (`InventoryID`),
+  ADD KEY `MenuItemID` (`MenuItemID`);
+
+--
+-- Indexes for table `menuitems`
+--
+ALTER TABLE `menuitems`
+  ADD PRIMARY KEY (`MenuItemID`);
+
+--
+-- Indexes for table `menu_combinations`
+--
+ALTER TABLE `menu_combinations`
+  ADD PRIMARY KEY (`CombinationID`);
+
+--
+-- Indexes for table `orderitems`
+--
+ALTER TABLE `orderitems`
+  ADD PRIMARY KEY (`OrderItemID`),
+  ADD KEY `OrderID` (`OrderID`),
+  ADD KEY `MenuItemID` (`MenuItemID`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`OrderID`),
+  ADD KEY `CustomerID` (`CustomerID`),
+  ADD KEY `StaffID` (`StaffID`);
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`PaymentID`),
+  ADD KEY `OrderID` (`OrderID`);
+
+--
+-- Indexes for table `reservations`
+--
+ALTER TABLE `reservations`
+  ADD PRIMARY KEY (`ReservationID`),
+  ADD KEY `CustomerID` (`CustomerID`);
+
+--
+-- Indexes for table `staff`
+--
+ALTER TABLE `staff`
+  ADD PRIMARY KEY (`StaffID`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`TransactionID`),
+  ADD KEY `OrderID` (`OrderID`),
+  ADD KEY `StaffID` (`StaffID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `FeedbackID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `inventory`
+--
+ALTER TABLE `inventory`
+  MODIFY `InventoryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `menuitems`
+--
+ALTER TABLE `menuitems`
+  MODIFY `MenuItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `menu_combinations`
+--
+ALTER TABLE `menu_combinations`
+  MODIFY `CombinationID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orderitems`
+--
+ALTER TABLE `orderitems`
+  MODIFY `OrderItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `OrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `PaymentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `reservations`
+--
+ALTER TABLE `reservations`
+  MODIFY `ReservationID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `staff`
+--
+ALTER TABLE `staff`
+  MODIFY `StaffID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `TransactionID` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
