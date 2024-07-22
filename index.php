@@ -346,7 +346,7 @@
                         <a href="assets/img/menu/lunch/chicken.png" class="glightbox"><img src="assets/img/menu/lunch/chicken.png" class="menu-img img-fluid" alt=""></a>
                         <h4>Chicken</h4>
                         <p class="ingredients">Chicken.</p>
-                        <p class="price">Kshs. 600</p>
+                        <p class="price">Kshs. 1, 200</p>
                     </div>
                     <!-- Menu Item -->
 
@@ -356,23 +356,7 @@
                         <p class="ingredients">Fish</p>
                         <p class="price">Kshs. 500</p>
                     </div>
-                    <!-- Menu Item -->
-
-                    <div class="col-lg-4 menu-item">
-                        <a href="assets/img/menu/lunch/lasagne.png" class="glightbox"><img src="assets/img/menu/lunch/lasagne.png" class="menu-img img-fluid" alt=""></a>
-                        <h4>Lasagne</h4>
-                        <p class="ingredients">Lasagne.</p>
-                        <p class="price">Kshs. 600</p>
-                    </div>
-                    <!-- Menu Item -->
-
-                    <div class="col-lg-4 menu-item">
-                        <a href="assets/img/menu/lunch/pizza.png" class="glightbox"><img src="assets/img/menu/lunch/pizza.png" class="menu-img img-fluid" alt=""></a>
-                        <h4>Pizza</h4>
-                        <p class="ingredients">Pizza</p>
-                        <p class="price">Kshs. 800</p>
-                    </div>
-                    <!-- Menu Item -->
+                  
 
                 </div>
             </div>
@@ -386,44 +370,36 @@
 
                 <div class="row gy-5">
                     <div class="col-lg-4 menu-item">
-                        <a href="assets/img/menu/dinner/beef.png" class="glightbox"><img src="assets/img/menu/dinner/beef.png" class="menu-img img-fluid" alt=""></a>
-                        <h4>Beef</h4>
-                        <p class="ingredients">Beef</p>
-                        <p class="price">Kshs. 700</p>
+                        <a href="assets/img/menu/dinner/mashed.png" class="glightbox"><img src="assets/img/menu/dinner/mashed.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Mashed Potatoes</h4>
+                        <p class="ingredients">Mashed</p>
+                        <p class="price">Kshs. 1, 200</p>
                     </div>
                     <!-- Menu Item -->
 
                     <div class="col-lg-4 menu-item">
-                        <a href="assets/img/menu/dinner/beanstew.png" class="glightbox"><img src="assets/img/menu/dinner/beanstew.png" class="menu-img img-fluid" alt=""></a>
-                        <h4>Bean Stew</h4>
-                        <p class="ingredients">Bean Stew</p>
-                        <p class="price">Kshs. 600</p>
+                        <a href="assets/img/menu/dinner/Chicken.png" class="glightbox"><img src="assets/img/menu/dinner/chicken.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Chicken Stew</h4>
+                        <p class="ingredients">Chicken</p>
+                        <p class="price">Kshs. 1,300</p>
                     </div>
                     <!-- Menu Item -->
 
                     <div class="col-lg-4 menu-item">
-                        <a href="assets/img/menu/dinner/mutura.png" class="glightbox"><img src="assets/img/menu/dinner/mutura.png" class="menu-img img-fluid" alt=""></a>
-                        <h4>Mutura</h4>
-                        <p class="ingredients">Mutura.</p>
-                        <p class="price">Kshs. 500</p>
+                        <a href="assets/img/menu/dinner/kachumbari.png" class="glightbox"><img src="assets/img/menu/dinner/Kachumbari.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Kachumbari</h4>
+                        <p class="ingredients">Kachumbari.</p>
+                        <p class="price">Kshs. 200</p>
                     </div>
                     <!-- Menu Item -->
 
                     <div class="col-lg-4 menu-item">
-                        <a href="assets/img/menu/dinner/rice.png" class="glightbox"><img src="assets/img/menu/dinner/rice.png" class="menu-img img-fluid" alt=""></a>
-                        <h4>Rice</h4>
-                        <p class="ingredients">Rice</p>
-                        <p class="price">Kshs. 500</p>
+                        <a href="assets/img/menu/dinner/steak.jpg" class="glightbox"><img src="assets/img/menu/dinner/steak.jpg" class="menu-img img-fluid" alt=""></a>
+                        <h4>Beef Steak</h4>
+                        <p class="ingredients">Beef Steak</p>
+                        <p class="price">Kshs. 1, 900</p>
                     </div>
-                    <!-- Menu Item -->
-
-                    <div class="col-lg-4 menu-item">
-                        <a href="assets/img/menu/dinner/soup.png" class="glightbox"><img src="assets/img/menu/dinner/soup.png" class="menu-img img-fluid" alt=""></a>
-                        <h4>Soup</h4>
-                        <p class="ingredients">Soup</p>
-                        <p class="price">Kshs. 300</p>
-                    </div>
-                    <!-- Menu Item -->
+                
 
                 </div>
             </div>
@@ -538,7 +514,7 @@
                     <div class="col-lg-4 reservation-img" style="background-image: url(assets/img/reservation.jpg);"></div>
 
                     <div class="col-lg-8 d-flex align-items-center reservation-form-bg" data-aos="fade-up" data-aos-delay="200">
-                        <form action="forms/book-a-table.php" method="post" role="form" class="php-email-form">
+                        <form action="accounts/book.php" method="post" role="form" class="php-email-form">
                             <div class="row gy-4">
                                 <div class="col-lg-4 col-md-6">
                                     <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required="">
@@ -580,6 +556,8 @@
 
         </section>
         <!-- /Book A Table Section -->
+        
+
 
         <!-- Gallery Section -->
         <section id="gallery" class="gallery section light-background">
