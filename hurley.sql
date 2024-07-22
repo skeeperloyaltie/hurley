@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2024 at 03:01 AM
+-- Generation Time: Jul 22, 2024 at 10:22 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -48,7 +48,9 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`CustomerID`, `FirstName`, `LastName`, `Email`, `Username`, `Password`, `PhoneNumber`, `Address`, `City`, `State`, `ZipCode`, `RegistrationDate`, `role`) VALUES
-(1, 'Skeeper', 'Loyaltie', 'skeepertech@gmail.com', 'skeepertech@gmail.com', '$2y$10$4izxi9v9HtYnKf2pzsmU9es7U4tEV69SKuQ8Zs8k9FXEYD.ndy49G', '0702940509', '154 00625', 'Add', 'nasjaks', '2121', '2024-07-21 00:38:09', 'customer');
+(1, 'Skeeper', 'Loyaltie', 'skeepertech@gmail.com', 'skeepertech@gmail.com', '$2y$10$4izxi9v9HtYnKf2pzsmU9es7U4tEV69SKuQ8Zs8k9FXEYD.ndy49G', '0702940509', '154 00625', 'Add', 'nasjaks', '2121', '2024-07-21 00:38:09', 'customer'),
+(2, 'Martin ', 'Ling', 'martinkingojungo@gmail.com', 'Guy084', '$2y$10$rOWTTVSdaJUwMizOGCHDv.8AkGHw/B8tjF2E1aVrdlDcJcKjt01Em', '0748998816', '33334', 'Nairobi', 'Kenya', '+254', '2024-07-22 08:57:37', 'customer'),
+(3, 'babe', 'babe', 'babe@gmaiil.com', 'babe@gmail.com', '$2y$10$cqSL828lLpE.GEn6NwjMd.epZIbJH46eUTI/C3zyQC1hHcInL4Buy', '07434334', '145 k', 'Nairobi', 'Nairobi', 'Nairobi', '2024-07-22 14:41:28', 'customer');
 
 -- --------------------------------------------------------
 
@@ -99,6 +101,17 @@ CREATE TABLE `menuitems` (
   `Available` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `menuitems`
+--
+
+INSERT INTO `menuitems` (`MenuItemID`, `Name`, `Description`, `Price`, `Category`, `Available`) VALUES
+(1, 'Cheeseburger', 'A juicy beef patty with cheese, lettuce, and tomato.', 8.99, 'Burgers', 1),
+(2, 'Margherita Pizza', 'Classic pizza with tomatoes, mozzarella, and basil.', 12.99, 'Pizzas', 1),
+(3, 'Caesar Salad', 'Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese.', 7.49, 'Salads', 1),
+(4, 'Spaghetti Carbonara', 'Spaghetti with a creamy egg-based sauce, pancetta, and Parmesan cheese.', 14.99, 'Pasta', 0),
+(5, 'Chocolate Cake', 'Rich and moist chocolate cake with chocolate frosting.', 5.99, 'Desserts', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -135,6 +148,13 @@ CREATE TABLE `orderitems` (
   `Price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orderitems`
+--
+
+INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `MenuItemID`, `Quantity`, `Price`) VALUES
+(0, 0, 1, 21, 8.99);
+
 -- --------------------------------------------------------
 
 --
@@ -150,6 +170,13 @@ CREATE TABLE `orders` (
   `Status` varchar(50) DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`OrderID`, `CustomerID`, `OrderDate`, `StaffID`, `TotalAmount`, `Status`) VALUES
+(0, 1, '2024-07-22 11:51:55', NULL, 188.79, 'Paid');
+
 -- --------------------------------------------------------
 
 --
@@ -164,6 +191,13 @@ CREATE TABLE `payments` (
   `PaymentMethod` varchar(50) DEFAULT NULL,
   `TransactionID` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`PaymentID`, `OrderID`, `PaymentDate`, `Amount`, `PaymentMethod`, `TransactionID`) VALUES
+(0, 0, '2024-07-22 12:03:59', 1233.00, 'Debit Card', '12ASASSA');
 
 -- --------------------------------------------------------
 
@@ -185,7 +219,7 @@ CREATE TABLE `reservations` (
 --
 
 INSERT INTO `reservations` (`ReservationID`, `CustomerID`, `ReservationDate`, `NumberOfGuests`, `SpecialRequests`, `Status`) VALUES
-(0, 1, '2024-07-20 02:10:20', 23, '21', 'Approved');
+(0, 11, '2024-07-22 19:54:57', 23, 'Proposal', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -211,7 +245,9 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`StaffID`, `FirstName`, `LastName`, `Username`, `Role`, `Email`, `PhoneNumber`, `HireDate`, `Password`, `IsBlacklisted`) VALUES
-(1, 'Admin', 'User', 'admin', 'Admin', 'admin@example.com', '1234567890', '2024-07-19 23:02:05', '$2y$10$1asKaMgA.IzUoYOQRaUWEuZrSNpsbfIve4w.Ksn3P6yzu3ZQOQFmO', 0);
+(11, 'Hurley', 'Admin', 'admin', 'Admin', 'admin@hurley.com', '1234567890', '2024-07-21 10:39:36', '$2y$10$qsKtkaLOu2cpN6NVGXXzCeQlN/OXJFJ17ZMsxygmdqjiFcI0Z/vre', 0),
+(14, 'Julias', 'Ochieng', 'OchiengJ', 'Waiter', 'julias@ochieng', '12345678', '2024-07-21 11:14:54', '$2y$10$PHuTGBNHHNKtg4H2gafa0uXk21GMJxcagL7w4X.49YqoNjYoSlIcy', 0),
+(20, 'Mike', 'Okumu', 'MikeO', 'Manager', 'mikeokumu@gmail.com', '0723456789', '2024-07-22 19:48:40', '$2y$10$Kj6Z.TsPP6g18Z0yy1xEFeBv1sGe0xZCTxF7iFtsa4JkDTr8ewdkW', 0);
 
 -- --------------------------------------------------------
 
@@ -311,7 +347,7 @@ ALTER TABLE `staff`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `menu_combinations`
@@ -323,7 +359,7 @@ ALTER TABLE `menu_combinations`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `StaffID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `StaffID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
