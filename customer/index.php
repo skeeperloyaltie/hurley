@@ -1,10 +1,14 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Include database connection
 include 'config.php'; // Update with your actual connection file
 
 // Check user session
 session_start();
-$customerID = $_SESSION['user_id']; // Ensure customer ID is set when user logs in
+$customerID = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0; // Ensure customer ID is set when user logs in
 
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -13,50 +17,84 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $numberOfGuests = $_POST['number_of_guests'];
         $specialRequests = $_POST['special_requests'];
 
-        $stmt = $mysqli->prepare("INSERT INTO reservations (CustomerID, NumberOfGuests, SpecialRequests) VALUES (?, ?, ?)");
-        $stmt->bind_param("iis", $customerID, $numberOfGuests, $specialRequests);
-        $stmt->execute();
-        $stmt->close();
+        if (empty($numberOfGuests)) {
+            echo "Number of guests is required.";
+        } else {
+            $stmt = $mysqli->prepare("INSERT INTO reservations (CustomerID, NumberOfGuests, SpecialRequests) VALUES (?, ?, ?)");
+            if ($stmt) {
+                $stmt->bind_param("iis", $customerID, $numberOfGuests, $specialRequests);
+                $stmt->execute();
+                $stmt->close();
+            } else {
+                echo "Error preparing statement: " . $mysqli->error;
+            }
+        }
     }
 
     // Place order
     elseif (isset($_POST['place_order'])) {
-        $menuItemIDs = $_POST['menu_item_id'];
-        $quantities = $_POST['quantity'];
-        $totalAmount = 0.00;
+        if (!empty($_POST['menu_item_id']) && !empty($_POST['quantity'])) {
+            $menuItemIDs = $_POST['menu_item_id'];
+            $quantities = $_POST['quantity'];
+            $totalAmount = 0.00;
 
-        // Calculate total amount
-        foreach ($menuItemIDs as $index => $menuItemID) {
-            $stmt = $mysqli->prepare("SELECT Price FROM menuitems WHERE MenuItemID = ?");
-            $stmt->bind_param("i", $menuItemID);
-            $stmt->execute();
-            $stmt->bind_result($price);
-            $stmt->fetch();
-            $totalAmount += $price * $quantities[$index];
-            $stmt->close();
-        }
+            foreach ($menuItemIDs as $index => $menuItemID) {
+                if (isset($quantities[$index])) {
+                    $quantity = $quantities[$index];
 
-        // Insert order
-        $stmt = $mysqli->prepare("INSERT INTO orders (CustomerID, TotalAmount) VALUES (?, ?)");
-        $stmt->bind_param("id", $customerID, $totalAmount);
-        $stmt->execute();
-        $orderID = $stmt->insert_id;
-        $stmt->close();
+                    $stmt = $mysqli->prepare("SELECT Price FROM menuitems WHERE MenuItemID = ?");
+                    if ($stmt) {
+                        $stmt->bind_param("i", $menuItemID);
+                        $stmt->execute();
+                        $stmt->bind_result($price);
+                        $stmt->fetch();
+                        $totalAmount += $price * $quantity;
+                        $stmt->close();
+                    } else {
+                        echo "Error preparing statement: " . $mysqli->error;
+                    }
+                }
+            }
 
-        // Insert order items
-        foreach ($menuItemIDs as $index => $menuItemID) {
-            $quantity = $quantities[$index];
-            $stmt = $mysqli->prepare("SELECT Price FROM menuitems WHERE MenuItemID = ?");
-            $stmt->bind_param("i", $menuItemID);
-            $stmt->execute();
-            $stmt->bind_result($price);
-            $stmt->fetch();
-            $stmt->close();
+            // Insert order
+            $stmt = $mysqli->prepare("INSERT INTO orders (CustomerID, TotalAmount, Status) VALUES (?, ?, 'Pending')");
+            if ($stmt) {
+                $stmt->bind_param("id", $customerID, $totalAmount);
+                $stmt->execute();
+                $orderID = $stmt->insert_id;
+                $stmt->close();
 
-            $stmt = $mysqli->prepare("INSERT INTO orderitems (OrderID, MenuItemID, Quantity, Price) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("iiid", $orderID, $menuItemID, $quantity, $price);
-            $stmt->execute();
-            $stmt->close();
+                // Insert order items
+                foreach ($menuItemIDs as $index => $menuItemID) {
+                    if (isset($quantities[$index])) {
+                        $quantity = $quantities[$index];
+
+                        $stmt = $mysqli->prepare("SELECT Price FROM menuitems WHERE MenuItemID = ?");
+                        if ($stmt) {
+                            $stmt->bind_param("i", $menuItemID);
+                            $stmt->execute();
+                            $stmt->bind_result($price);
+                            $stmt->fetch();
+                            $stmt->close();
+
+                            $stmt = $mysqli->prepare("INSERT INTO orderitems (OrderID, MenuItemID, Quantity, Price) VALUES (?, ?, ?, ?)");
+                            if ($stmt) {
+                                $stmt->bind_param("iiid", $orderID, $menuItemID, $quantity, $price);
+                                $stmt->execute();
+                                $stmt->close();
+                            } else {
+                                echo "Error preparing statement: " . $mysqli->error;
+                            }
+                        } else {
+                            echo "Error preparing statement: " . $mysqli->error;
+                        }
+                    }
+                }
+            } else {
+                echo "Error preparing statement: " . $mysqli->error;
+            }
+        } else {
+            echo "Error: Menu items and quantities are required.";
         }
     }
 
@@ -68,15 +106,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $transactionID = $_POST['transaction_id'];
 
         $stmt = $mysqli->prepare("INSERT INTO payments (OrderID, Amount, PaymentMethod, TransactionID) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("idss", $orderID, $amount, $paymentMethod, $transactionID);
-        $stmt->execute();
-        $stmt->close();
+        if ($stmt) {
+            $stmt->bind_param("idss", $orderID, $amount, $paymentMethod, $transactionID);
+            $stmt->execute();
+            $stmt->close();
 
-        // Update order status
-        $stmt = $mysqli->prepare("UPDATE orders SET Status = 'Paid' WHERE OrderID = ?");
-        $stmt->bind_param("i", $orderID);
-        $stmt->execute();
-        $stmt->close();
+            // Update order status
+            $stmt = $mysqli->prepare("UPDATE orders SET Status = 'Paid' WHERE OrderID = ?");
+            if ($stmt) {
+                $stmt->bind_param("i", $orderID);
+                $stmt->execute();
+                $stmt->close();
+            } else {
+                echo "Error preparing statement: " . $mysqli->error;
+            }
+        } else {
+            echo "Error preparing statement: " . $mysqli->error;
+        }
     }
 }
 
@@ -87,22 +133,29 @@ $menuItemsResult = $mysqli->query($menuItemsQuery);
 // Fetch reservations
 $reservationsQuery = "SELECT * FROM reservations WHERE CustomerID = ?";
 $reservationsStmt = $mysqli->prepare($reservationsQuery);
-$reservationsStmt->bind_param("i", $customerID);
-$reservationsStmt->execute();
-$reservationsResult = $reservationsStmt->get_result();
+if ($reservationsStmt) {
+    $reservationsStmt->bind_param("i", $customerID);
+    $reservationsStmt->execute();
+    $reservationsResult = $reservationsStmt->get_result();
+} else {
+    echo "Error preparing statement: " . $mysqli->error;
+}
 
 // Fetch orders
 $ordersQuery = "SELECT * FROM orders WHERE CustomerID = ?";
 $ordersStmt = $mysqli->prepare($ordersQuery);
-$ordersStmt->bind_param("i", $customerID);
-$ordersStmt->execute();
-$ordersResult = $ordersStmt->get_result();
+if ($ordersStmt) {
+    $ordersStmt->bind_param("i", $customerID);
+    $ordersStmt->execute();
+    $ordersResult = $ordersStmt->get_result();
+} else {
+    echo "Error preparing statement: " . $mysqli->error;
+}
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -112,7 +165,6 @@ $ordersResult = $ordersStmt->get_result();
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-
 <body>
     <div class="container mt-4">
         <h1>Customer Dashboard</h1>
@@ -192,20 +244,34 @@ $ordersResult = $ordersStmt->get_result();
                     <button type="submit" name="place_order" class="btn btn-primary">Place Order</button>
                 </form>
                 <h3 class="mt-4">Your Orders</h3>
+                <div class="form-group">
+                    <label for="order_status_filter">Filter Orders By Status</label>
+                    <select class="form-control" id="order_status_filter" onchange="filterOrders(this.value)">
+                        <option value="">All</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Pending">Pending</option>
+                    </select>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Order ID</th>
                             <th>Total Amount</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="orders_table_body">
                         <?php while ($order = $ordersResult->fetch_assoc()) : ?>
-                            <tr>
+                            <tr class="order-row" data-status="<?php echo htmlspecialchars($order['Status']); ?>">
                                 <td><?php echo htmlspecialchars($order['OrderID']); ?></td>
                                 <td>$<?php echo htmlspecialchars($order['TotalAmount']); ?></td>
                                 <td><?php echo htmlspecialchars($order['Status']); ?></td>
+                                <td>
+                                    <?php if (htmlspecialchars($order['Status']) === 'Pending') : ?>
+                                        <button class="btn btn-primary btn-sm" onclick="showPaymentForm(<?php echo htmlspecialchars($order['OrderID']); ?>)">Pay Now</button>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -215,39 +281,28 @@ $ordersResult = $ordersStmt->get_result();
             <!-- Make Payment Section -->
             <div id="payment_section" class="tab-pane fade">
                 <h3>Make a Payment</h3>
-                <form method="post">
-                    <div class="form-group">
-                        <label for="order_id">Order ID</label>
-                        <select class="form-control" id="order_id" name="order_id" required>
-                            <?php
-                            // Reset ordersResult for use in the dropdown
-                            $ordersStmt->execute();
-                            $ordersResult = $ordersStmt->get_result();
-                            while ($order = $ordersResult->fetch_assoc()) : ?>
-                                <option value="<?php echo htmlspecialchars($order['OrderID']); ?>">
-                                    Order #<?php echo htmlspecialchars($order['OrderID']); ?> - $<?php echo htmlspecialchars($order['TotalAmount']); ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="amount">Amount</label>
-                        <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="payment_method">Payment Method</label>
-                        <select class="form-control" id="payment_method" name="payment_method" required>
-                            <option value="Credit Card">Credit Card</option>
-                            <option value="Debit Card">Debit Card</option>
-                            <option value="PayPal">PayPal</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="transaction_id">Transaction ID</label>
-                        <input type="text" class="form-control" id="transaction_id" name="transaction_id" required>
-                    </div>
-                    <button type="submit" name="make_payment" class="btn btn-primary">Make Payment</button>
-                </form>
+                <div id="payment_form_container" style="display:none;">
+                    <form method="post" id="payment_form">
+                        <input type="hidden" id="order_id" name="order_id">
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment_method">Payment Method</label>
+                            <select class="form-control" id="payment_method" name="payment_method" required>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="PayPal">PayPal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transaction_id">Transaction ID</label>
+                            <input type="text" class="form-control" id="transaction_id" name="transaction_id" required>
+                        </div>
+                        <button type="submit" name="make_payment" class="btn btn-primary">Make Payment</button>
+                    </form>
+                </div>
             </div>
 
             <!-- Profile Section -->
@@ -257,10 +312,14 @@ $ordersResult = $ordersStmt->get_result();
                 // Fetch customer profile
                 $profileQuery = "SELECT * FROM Customers WHERE CustomerID = ?";
                 $profileStmt = $mysqli->prepare($profileQuery);
-                $profileStmt->bind_param("i", $customerID);
-                $profileStmt->execute();
-                $profileResult = $profileStmt->get_result();
-                $customerProfile = $profileResult->fetch_assoc();
+                if ($profileStmt) {
+                    $profileStmt->bind_param("i", $customerID);
+                    $profileStmt->execute();
+                    $profileResult = $profileStmt->get_result();
+                    $customerProfile = $profileResult->fetch_assoc();
+                } else {
+                    echo "Error preparing statement: " . $mysqli->error;
+                }
                 ?>
                 <p><strong>First Name:</strong> <?php echo htmlspecialchars($customerProfile['FirstName']); ?></p>
                 <p><strong>Last Name:</strong> <?php echo htmlspecialchars($customerProfile['LastName']); ?></p>
@@ -274,8 +333,25 @@ $ordersResult = $ordersStmt->get_result();
             </div>
         </div>
     </div>
-</body>
 
+    <script>
+        function filterOrders(status) {
+            const rows = document.querySelectorAll('.order-row');
+            rows.forEach(row => {
+                if (status === "" || row.dataset.status === status) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function showPaymentForm(orderID) {
+            document.getElementById('order_id').value = orderID;
+            document.getElementById('payment_form_container').style.display = 'block';
+        }
+    </script>
+</body>
 </html>
 
 <?php
