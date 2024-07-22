@@ -434,16 +434,7 @@
     </div>
 </section>
 
-<script>
-    function checkLoginStatus() {
-        // Simulate checking if the user is logged in
-        var isLoggedIn = /* Your logic to check login status, e.g., true if logged in, false otherwise */;
-        
-        if (!isLoggedIn) {
-            window.location.href = "/login";
-        }
-    }
-</script>
+
 
 
 

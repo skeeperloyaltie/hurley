@@ -3,38 +3,41 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+session_start();
+
 // Include database connection
 include 'config.php'; // Update with your actual connection file
 
 // Check user session
-session_start();
 $customerID = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0; // Ensure customer ID is set when user logs in
 
-$response = ['status' => 'error', 'message' => 'An error occurred.'];
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Make reservation
+    // Handle different form submissions
     if (isset($_POST['make_reservation'])) {
         $numberOfGuests = $_POST['number_of_guests'];
         $specialRequests = $_POST['special_requests'];
 
         if (empty($numberOfGuests)) {
-            $response['message'] = 'Number of guests is required.';
+            $_SESSION['message'] = 'Number of guests is required.';
+            $_SESSION['message_type'] = 'error';
         } else {
             $stmt = $mysqli->prepare("INSERT INTO reservations (CustomerID, NumberOfGuests, SpecialRequests) VALUES (?, ?, ?)");
             if ($stmt) {
                 $stmt->bind_param("iis", $customerID, $numberOfGuests, $specialRequests);
-                $stmt->execute();
+                if ($stmt->execute()) {
+                    $_SESSION['message'] = 'Reservation made successfully.';
+                    $_SESSION['message_type'] = 'success';
+                } else {
+                    $_SESSION['message'] = "Error executing statement: " . $stmt->error;
+                    $_SESSION['message_type'] = 'error';
+                }
                 $stmt->close();
-                $response = ['status' => 'success', 'message' => 'Reservation made successfully.'];
             } else {
-                $response['message'] = "Error preparing statement: " . $mysqli->error;
+                $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+                $_SESSION['message_type'] = 'error';
             }
         }
-    }
-
-    // Place order
-    elseif (isset($_POST['place_order'])) {
+    } elseif (isset($_POST['place_order'])) {
         if (!empty($_POST['menu_item_id']) && !empty($_POST['quantity'])) {
             $menuItemIDs = $_POST['menu_item_id'];
             $quantities = $_POST['quantity'];
@@ -53,7 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $totalAmount += $price * $quantity;
                         $stmt->close();
                     } else {
-                        $response['message'] = "Error preparing statement: " . $mysqli->error;
+                        $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+                        $_SESSION['message_type'] = 'error';
                     }
                 }
             }
@@ -62,47 +66,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $mysqli->prepare("INSERT INTO orders (CustomerID, TotalAmount, Status) VALUES (?, ?, 'Pending')");
             if ($stmt) {
                 $stmt->bind_param("id", $customerID, $totalAmount);
-                $stmt->execute();
-                $orderID = $stmt->insert_id;
-                $stmt->close();
+                if ($stmt->execute()) {
+                    $orderID = $stmt->insert_id;
 
-                // Insert order items
-                foreach ($menuItemIDs as $index => $menuItemID) {
-                    if (isset($quantities[$index])) {
-                        $quantity = $quantities[$index];
+                    // Insert order items
+                    foreach ($menuItemIDs as $index => $menuItemID) {
+                        if (isset($quantities[$index])) {
+                            $quantity = $quantities[$index];
 
-                        $stmt = $mysqli->prepare("SELECT Price FROM menuitems WHERE MenuItemID = ?");
-                        if ($stmt) {
-                            $stmt->bind_param("i", $menuItemID);
-                            $stmt->execute();
-                            $stmt->bind_result($price);
-                            $stmt->fetch();
-                            $stmt->close();
-
-                            $stmt = $mysqli->prepare("INSERT INTO orderitems (OrderID, MenuItemID, Quantity, Price) VALUES (?, ?, ?, ?)");
+                            $stmt = $mysqli->prepare("SELECT Price FROM menuitems WHERE MenuItemID = ?");
                             if ($stmt) {
-                                $stmt->bind_param("iiid", $orderID, $menuItemID, $quantity, $price);
+                                $stmt->bind_param("i", $menuItemID);
                                 $stmt->execute();
+                                $stmt->bind_result($price);
+                                $stmt->fetch();
                                 $stmt->close();
+
+                                $stmt = $mysqli->prepare("INSERT INTO orderitems (OrderID, MenuItemID, Quantity, Price) VALUES (?, ?, ?, ?)");
+                                if ($stmt) {
+                                    $stmt->bind_param("iiid", $orderID, $menuItemID, $quantity, $price);
+                                    $stmt->execute();
+                                    $stmt->close();
+                                } else {
+                                    $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+                                    $_SESSION['message_type'] = 'error';
+                                }
                             } else {
-                                $response['message'] = "Error preparing statement: " . $mysqli->error;
+                                $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+                                $_SESSION['message_type'] = 'error';
                             }
-                        } else {
-                            $response['message'] = "Error preparing statement: " . $mysqli->error;
                         }
                     }
+                    $_SESSION['message'] = 'Order placed successfully.';
+                    $_SESSION['message_type'] = 'success';
+                } else {
+                    $_SESSION['message'] = "Error executing statement: " . $stmt->error;
+                    $_SESSION['message_type'] = 'error';
                 }
-                $response = ['status' => 'success', 'message' => 'Order placed successfully.'];
+                $stmt->close();
             } else {
-                $response['message'] = "Error preparing statement: " . $mysqli->error;
+                $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+                $_SESSION['message_type'] = 'error';
             }
         } else {
-            $response['message'] = 'Menu items and quantities are required.';
+            $_SESSION['message'] = 'Menu items and quantities are required.';
+            $_SESSION['message_type'] = 'error';
         }
-    }
-
-    // Make payment
-    elseif (isset($_POST['make_payment'])) {
+    } elseif (isset($_POST['make_payment'])) {
         $orderID = $_POST['order_id'];
         $amount = $_POST['amount'];
         $paymentMethod = $_POST['payment_method'];
@@ -111,25 +121,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $mysqli->prepare("INSERT INTO payments (OrderID, Amount, PaymentMethod, TransactionID) VALUES (?, ?, ?, ?)");
         if ($stmt) {
             $stmt->bind_param("idss", $orderID, $amount, $paymentMethod, $transactionID);
-            $stmt->execute();
-            $stmt->close();
-
-            // Update order status
-            $stmt = $mysqli->prepare("UPDATE orders SET Status = 'Paid' WHERE OrderID = ?");
-            if ($stmt) {
-                $stmt->bind_param("i", $orderID);
-                $stmt->execute();
-                $stmt->close();
-                $response = ['status' => 'success', 'message' => 'Payment made successfully.'];
+            if ($stmt->execute()) {
+                // Update order status
+                $stmt = $mysqli->prepare("UPDATE orders SET Status = 'Paid' WHERE OrderID = ?");
+                if ($stmt) {
+                    $stmt->bind_param("i", $orderID);
+                    if ($stmt->execute()) {
+                        $_SESSION['message'] = 'Payment made successfully.';
+                        $_SESSION['message_type'] = 'success';
+                    } else {
+                        $_SESSION['message'] = "Error executing statement: " . $stmt->error;
+                        $_SESSION['message_type'] = 'error';
+                    }
+                    $stmt->close();
+                } else {
+                    $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+                    $_SESSION['message_type'] = 'error';
+                }
             } else {
-                $response['message'] = "Error preparing statement: " . $mysqli->error;
+                $_SESSION['message'] = "Error executing statement: " . $stmt->error;
+                $_SESSION['message_type'] = 'error';
             }
+            $stmt->close();
         } else {
-            $response['message'] = "Error preparing statement: " . $mysqli->error;
+            $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+            $_SESSION['message_type'] = 'error';
         }
     }
 
-    echo json_encode($response);
+    // Redirect to the same page to show the message
+    header("Location: customer_dashboard.php");
     exit;
 }
 
@@ -159,6 +180,16 @@ if ($ordersStmt) {
     echo "Error preparing statement: " . $mysqli->error;
 }
 
+// Fetch payments
+$paymentsQuery = "SELECT * FROM payments WHERE OrderID IN (SELECT OrderID FROM orders WHERE CustomerID = ?)";
+$paymentsStmt = $mysqli->prepare($paymentsQuery);
+if ($paymentsStmt) {
+    $paymentsStmt->bind_param("i", $customerID);
+    $paymentsStmt->execute();
+    $paymentsResult = $paymentsStmt->get_result();
+} else {
+    echo "Error preparing statement: " . $mysqli->error;
+}
 ?>
 
 <!DOCTYPE html>
@@ -168,39 +199,52 @@ if ($ordersStmt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
     <div class="container mt-4">
         <h1>Customer Dashboard</h1>
+
+        <!-- Display messages -->
+        <?php if (isset($_SESSION['message'])): ?>
+        <div class="alert alert-<?php echo $_SESSION['message_type'] === 'success' ? 'success' : 'danger'; ?>">
+            <?php echo $_SESSION['message']; ?>
+        </div>
+        <?php
+        unset($_SESSION['message']);
+        unset($_SESSION['message_type']);
+        endif;
+        ?>
+
         <!-- Navigation -->
-        <ul class="nav nav-pills mb-4">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="pill" href="#reservation_section">Reservations</a>
+                <a class="nav-link active" id="make-reservation-tab" data-toggle="tab" href="#make-reservation" role="tab" aria-controls="make-reservation" aria-selected="true">Make Reservation</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#order_section">Orders</a>
+                <a class="nav-link" id="place-order-tab" data-toggle="tab" href="#place-order" role="tab" aria-controls="place-order" aria-selected="false">Place Order</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#payment_section">Payments</a>
+                <a class="nav-link" id="make-payment-tab" data-toggle="tab" href="#make-payment" role="tab" aria-controls="make-payment" aria-selected="false">Make Payment</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#profile_section">Profile</a>
+                <a class="nav-link" id="view-reservations-tab" data-toggle="tab" href="#view-reservations" role="tab" aria-controls="view-reservations" aria-selected="false">View Reservations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="view-orders-tab" data-toggle="tab" href="#view-orders" role="tab" aria-controls="view-orders" aria-selected="false">View Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="view-payments-tab" data-toggle="tab" href="#view-payments" role="tab" aria-controls="view-payments" aria-selected="false">View Payments</a>
             </li>
             <div style="float:right;" class="mb-4">
                 <a href="logout.php" class="btn btn-danger">Logout</a>
             </div>
         </ul>
 
-        <div class="tab-content">
-            <!-- Make Reservation Section -->
-            <div id="reservation_section" class="tab-pane fade show active">
-                <h3>Make a Reservation</h3>
-                <form id="reservation_form" method="post">
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Make Reservation -->
+            <div class="tab-pane fade show active" id="make-reservation" role="tabpanel" aria-labelledby="make-reservation-tab">
+                <form action="customer_dashboard.php" method="POST" class="mt-4">
                     <div class="form-group">
                         <label for="number_of_guests">Number of Guests</label>
                         <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" required>
@@ -209,59 +253,39 @@ if ($ordersStmt) {
                         <label for="special_requests">Special Requests</label>
                         <textarea class="form-control" id="special_requests" name="special_requests"></textarea>
                     </div>
-                    <button type="submit" name="make_reservation" class="btn btn-primary">Make Reservation</button>
+                    <button type="submit" name="make_reservation" class="btn btn-primary">Submit Reservation</button>
                 </form>
-                <h3 class="mt-4">My Reservations</h3>
-                <ul class="list-group">
-                    <?php while ($reservation = $reservationsResult->fetch_assoc()): ?>
-                        <li class="list-group-item">
-                            Guests: <?= $reservation['NumberOfGuests']; ?> | Special Requests: <?= $reservation['SpecialRequests']; ?>
-                        </li>
-                    <?php endwhile; ?>
-                </ul>
             </div>
 
-            <!-- Place Order Section -->
-            <div id="order_section" class="tab-pane fade">
-                <h3>Place an Order</h3>
-                <form id="order_form" method="post">
+            <!-- Place Order -->
+            <div class="tab-pane fade" id="place-order" role="tabpanel" aria-labelledby="place-order-tab">
+                <form action="customer_dashboard.php" method="POST" class="mt-4">
                     <div class="form-group">
-                        <label for="menu_items">Menu Items</label>
-                        <div id="menu_items">
+                        <label for="menu_item_id">Menu Item</label>
+                        <select multiple class="form-control" id="menu_item_id" name="menu_item_id[]">
                             <?php while ($menuItem = $menuItemsResult->fetch_assoc()): ?>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="<?= $menuItem['MenuItemID']; ?>" name="menu_item_id[]">
-                                    <label class="form-check-label">
-                                        <?= $menuItem['ItemName']; ?> - $<?= $menuItem['Price']; ?>
-                                    </label>
-                                    <input type="number" class="form-control mt-2" name="quantity[]" placeholder="Quantity">
-                                </div>
+                            <option value="<?php echo $menuItem['MenuItemID']; ?>"><?php echo $menuItem['Name']; ?></option>
                             <?php endwhile; ?>
-                        </div>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity[]" required>
                     </div>
                     <button type="submit" name="place_order" class="btn btn-primary">Place Order</button>
                 </form>
-                <h3 class="mt-4">My Orders</h3>
-                <ul class="list-group">
-                    <?php while ($order = $ordersResult->fetch_assoc()): ?>
-                        <li class="list-group-item">
-                            Order ID: <?= $order['OrderID']; ?> | Total Amount: $<?= $order['TotalAmount']; ?> | Status: <?= $order['Status']; ?>
-                        </li>
-                    <?php endwhile; ?>
-                </ul>
             </div>
 
-            <!-- Make Payment Section -->
-            <div id="payment_section" class="tab-pane fade">
-                <h3>Make a Payment</h3>
-                <form id="payment_form" method="post">
+            <!-- Make Payment -->
+            <div class="tab-pane fade" id="make-payment" role="tabpanel" aria-labelledby="make-payment-tab">
+                <form action="customer_dashboard.php" method="POST" class="mt-4">
                     <div class="form-group">
                         <label for="order_id">Order ID</label>
                         <input type="number" class="form-control" id="order_id" name="order_id" required>
                     </div>
                     <div class="form-group">
                         <label for="amount">Amount</label>
-                        <input type="number" class="form-control" id="amount" name="amount" required>
+                        <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
                     </div>
                     <div class="form-group">
                         <label for="payment_method">Payment Method</label>
@@ -275,79 +299,90 @@ if ($ordersStmt) {
                 </form>
             </div>
 
-            <!-- Profile Section -->
-            <div id="profile_section" class="tab-pane fade">
-                <h3>My Profile</h3>
-                <!-- Profile details can be shown here -->
+            <!-- View Reservations -->
+            <div class="tab-pane fade" id="view-reservations" role="tabpanel" aria-labelledby="view-reservations-tab">
+                <h3 class="mt-4">Your Reservations</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Number of Guests</th>
+                            <th>Special Requests</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($reservation = $reservationsResult->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $reservation['ReservationID']; ?></td>
+                            <td><?php echo $reservation['NumberOfGuests']; ?></td>
+                            <td><?php echo $reservation['SpecialRequests']; ?></td>
+                            <td><?php echo $reservation['ReservationDate']; ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- View Orders -->
+            <div class="tab-pane fade" id="view-orders" role="tabpanel" aria-labelledby="view-orders-tab">
+                <h3 class="mt-4">Your Orders</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($order = $ordersResult->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $order['OrderID']; ?></td>
+                            <td><?php echo $order['TotalAmount']; ?></td>
+                            <td><?php echo $order['Status']; ?></td>
+                            <td><?php echo $order['OrderDate']; ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- View Payments -->
+            <div class="tab-pane fade" id="view-payments" role="tabpanel" aria-labelledby="view-payments-tab">
+                <h3 class="mt-4">Your Payments</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Order ID</th>
+                            <th>Amount</th>
+                            <th>Payment Method</th>
+                            <th>Transaction ID</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($payment = $paymentsResult->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $payment['PaymentID']; ?></td>
+                            <td><?php echo $payment['OrderID']; ?></td>
+                            <td><?php echo $payment['Amount']; ?></td>
+                            <td><?php echo $payment['PaymentMethod']; ?></td>
+                            <td><?php echo $payment['TransactionID']; ?></td>
+                            <td><?php echo $payment['PaymentDate']; ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            // Handle reservation form submission
-            $('#reservation_form').on('submit', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            toastr.success(response.message);
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else {
-                            toastr.error(response.message);
-                        }
-                    }
-                });
-            });
-
-            // Handle order form submission
-            $('#order_form').on('submit', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            toastr.success(response.message);
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else {
-                            toastr.error(response.message);
-                        }
-                    }
-                });
-            });
-
-            // Handle payment form submission
-            $('#payment_form').on('submit', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            toastr.success(response.message);
-                            setTimeout(function () {
-                                location.reload();
-                            }, 2000);
-                        } else {
-                            toastr.error(response.message);
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+    <!-- Bootstrap and jQuery scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

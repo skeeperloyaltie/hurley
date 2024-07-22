@@ -6,8 +6,8 @@ $firstName = 'Admin';
 $lastName = 'User';
 $username = "admin";
 $role = 'Admin';
-$email = 'admin@example.com';
-$password = 'your_password'; // Replace with the actual password
+$email = 'admin@hurley.com';
+$password = 'admin@123'; // Replace with the actual password
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 $phoneNumber = '1234567890';
 
