@@ -26,7 +26,28 @@
 
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet">
+<style>
+    /* Gallery Section */
+#gallery .swiper-slide img {
+    width: 100%; /* Make images fill the slide container */
+    height: 100%; /* Make images fill the slide container */
+    object-fit: cover; /* Crop images to fit the container while preserving aspect ratio */
+    border-radius: 8px; /* Optional: Add rounded corners to images */
+}
 
+/* Menu Section */
+.menu .menu-item img {
+    width: 100%; /* Make images fill the menu item container */
+    height: 250px; /* Fixed height for menu items */
+    object-fit: cover; /* Crop images to fit the container while preserving aspect ratio */
+    border-radius: 8px; /* Optional: Add rounded corners to images */
+}
+
+/* Ensure the container of the image has a fixed size */
+.menu .menu-item {
+    height: 350px; /* Adjust based on image size and layout needs */
+}
+</style>
 
 </head>
 

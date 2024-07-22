@@ -238,54 +238,54 @@
             <div class="row gy-5">
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Mandazi</h4>
-                    <p class="ingredients">
-                        Deep-fried, slightly sweet dough snack.
-                    </p>
-                    <p class="price">
-                        Kshs. 150
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
+                    <a href="assets/img/menu/starter/samosa.png" class="glightbox"><img src="assets/img/menu/starter/samosa.png" height="250px" class="menu-img img-fluid" alt=""></a>
                     <h4>Samosa</h4>
                     <p class="ingredients">
-                        Savory pastry filled with spiced meat or vegetables.
+                        Deep-fried, sweet dough snack.
                     </p>
                     <p class="price">
-                        Kshs. 250
+                        Kshs. 185
                     </p>
                 </div>
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Nyama Choma</h4>
+                    <a href="assets/img/menu/starter/quaileggs.png" class="glightbox"><img src="assets/img/menu/starter/quaileggs.png" height="250px" class="menu-img img-fluid" alt=""></a>
+                    <h4>Quail Eggs</h4>
                     <p class="ingredients">
-                        Grilled meat seasoned with local spices.
+                        Quail eggs.
                     </p>
                     <p class="price">
-                        Kshs. 350
+                        Kshs. 1,000
                     </p>
                 </div>
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Matoke</h4>
+                    <a href="assets/img/menu/starter/cheese.png" class="glightbox"><img src="assets/img/menu/starter/cheese.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Cheese Souffle</h4>
                     <p class="ingredients">
-                        Plantain stew cooked with onions and spices.
+                        Cheese.
                     </p>
                     <p class="price">
-                        Kshs. 300
+                        Kshs. 1,200
                     </p>
                 </div>
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
+                    <a href="assets/img/menu/starter/onionrings.png" class="glightbox"><img src="assets/img/menu/starter/onionrings.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Onion Rings</h4>
+                    <p class="ingredients">
+                        Onion rings.
+                    </p>
+                    <p class="price">
+                        Kshs. 1,000
+                    </p>
+                </div>
+                <!-- Menu Item -->
+
+                <!-- <div class="col-lg-4 menu-item">
                     <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
                     <h4>Omena</h4>
                     <p class="ingredients">
@@ -294,10 +294,10 @@
                     <p class="price">
                         Kshs. 200
                     </p>
-                </div>
+                </div> -->
                 <!-- Menu Item -->
 
-                <div class="col-lg-4 menu-item">
+                <!-- <div class="col-lg-4 menu-item">
                     <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
                     <h4>Kachumbari</h4>
                     <p class="ingredients">
@@ -306,7 +306,7 @@
                     <p class="price">
                         Kshs. 100
                     </p>
-                </div>
+                </div> -->
                 <!-- Menu Item -->
 
             </div>
@@ -323,10 +323,10 @@
             <div class="row gy-5">
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Kenyan Breakfast</h4>
+                    <a href="assets/img/menu/breakfast/uji.png" class="glightbox"><img src="assets/img/menu/breakfast/uji.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Uji</h4>
                     <p class="ingredients">
-                        Traditional breakfast with tea, mandazi, and fruits.
+                    Nutritious porridge made from millet or sorghum.
                     </p>
                     <p class="price">
                         Kshs. 250
@@ -335,10 +335,10 @@
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Uji</h4>
+                    <a href="assets/img/menu/breakfast/coffee.png" class="glightbox"><img src="assets/img/menu/breakfast/coffee.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Coffee</h4>
                     <p class="ingredients">
-                        Nutritious porridge made from millet or sorghum.
+                        Coffee
                     </p>
                     <p class="price">
                         Kshs. 150
@@ -347,23 +347,22 @@
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Chapo and Beans</h4>
+                    <a href="assets/img/menu/breakfast/eggs.jpg" class="glightbox"><img src="assets/img/menu/breakfast/eggs.jpg" class="menu-img img-fluid" alt=""></a>
+                    <h4>Eggs Sausages</h4>
                     <p class="ingredients">
-                        Flatbread served with spicy beans.
+                    Fried eggs paired with savory sausages.
                     </p>
                     <p class="price">
-                        Kshs. 200
+                        Kshs. 800
                     </p>
                 </div>
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Eggs and Sausages</h4>
+                    <a href="assets/img/menu/breakfast/kebab.png" class="glightbox"><img src="assets/img/menu/breakfast/kebab.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Kebab</h4>
                     <p class="ingredients">
-                        Fried eggs paired with savory sausages.
-                    </p>
+Spiced Kebabs                    </p>
                     <p class="price">
                         Kshs. 180
                     </p>
@@ -371,11 +370,10 @@
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Fresh Fruits</h4>
+                    <a href="assets/img/menu/breakfast/maandazi.png" class="glightbox"><img src="assets/img/menu/breakfast/maandazi.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Maandazi</h4>
                     <p class="ingredients">
-                        A selection of seasonal fresh fruits.
-                    </p>
+Maandazi                    </p>
                     <p class="price">
                         Kshs. 150
                     </p>
@@ -383,13 +381,13 @@
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Tea and Coffee</h4>
+                    <a href="assets/img/menu/breakfast/latte.png" class="glightbox"><img src="assets/img/menu/breakfast/latte.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Latte</h4>
                     <p class="ingredients">
-                        Traditional Kenyan tea or coffee.
+                        Latte.
                     </p>
                     <p class="price">
-                        Kshs. 100
+                        Kshs. 200
                     </p>
                 </div>
                 <!-- Menu Item -->
@@ -408,25 +406,25 @@
             <div class="row gy-5">
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Kenyan Pilau</h4>
+                    <a href="assets/img/menu/lunch//omelete.png" class="glightbox"><img src="assets/img/menu/lunch/omelete.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Asian Omelete</h4>
                     <p class="ingredients">
-                        Spiced rice dish with vegetables or meat.
+                        Asian omelete
                     </p>
                     <p class="price">
-                        Kshs. 400
+                        Kshs. 1000
                     </p>
                 </div>
                 <!-- Menu Item -->
 
                 <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Githeri</h4>
+                    <a href="assets/img/menu/lunch/chicken.png" class="glightbox"><img src="assets/img/menu/lunch/chicken.png" class="menu-img img-fluid" alt=""></a>
+                    <h4>Chicken</h4>
                     <p class="ingredients">
-                        Traditional mix of maize and beans.
+                        Chicken.
                     </p>
                     <p class="price">
-                        Kshs. 350
+                        Kshs. 600
                     </p>
                 </div>
                 <!-- Menu Item -->
