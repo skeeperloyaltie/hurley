@@ -316,7 +316,6 @@ $salesResult = null;
                     <thead>
                         <tr>
                             <th>Order ID</th>
-                            <th>Table Number</th>
                             <th>Order Date</th>
                             <th>Total Amount</th>
                             <th>Status</th>
@@ -327,7 +326,6 @@ $salesResult = null;
                         <?php while ($order = $ordersResult->fetch_assoc()) : ?>
                             <tr>
                                 <td><?php echo $order['OrderID']; ?></td>
-                                <td><?php echo $order['TableNumber']; ?></td>
                                 <td><?php echo $order['OrderDate']; ?></td>
                                 <td><?php echo $order['TotalAmount']; ?></td>
                                 <td><?php echo $order['Status']; ?></td>
