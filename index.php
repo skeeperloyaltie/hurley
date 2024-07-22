@@ -635,28 +635,28 @@
                     </script>
                     <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-1.jpg"><img src="assets/img/gallery/gallery-1.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/chicken.png"><img src="assets/img/gallery/chicken.png" class="img-fluid" alt=""></a>
                         </div>
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-2.jpg"><img src="assets/img/gallery/gallery-2.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/coffee.png"><img src="assets/img/gallery/coffee.png" class="img-fluid" alt=""></a>
                         </div>
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-3.jpg"><img src="assets/img/gallery/gallery-3.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/latte.png"><img src="assets/img/gallery/latte.png" class="img-fluid" alt=""></a>
                         </div>
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-4.jpg"><img src="assets/img/gallery/gallery-4.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/mandazi.png"><img src="assets/img/gallery/mandazi.png" class="img-fluid" alt=""></a>
                         </div>
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-5.jpg"><img src="assets/img/gallery/gallery-5.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/steak.jpg"><img src="assets/img/gallery/steak.jpg" class="img-fluid" alt=""></a>
                         </div>
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-6.jpg"><img src="assets/img/gallery/gallery-6.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/uji.png"><img src="assets/img/gallery/uji.png" class="img-fluid" alt=""></a>
                         </div>
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-7.jpg"><img src="assets/img/gallery/gallery-7.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/eggs.jpg"><img src="assets/img/gallery/eggs.jpg" class="img-fluid" alt=""></a>
                         </div>
                         <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/gallery-8.jpg"><img src="assets/img/gallery/gallery-8.jpg" class="img-fluid" alt=""></a>
+                            <a class="glightbox" data-gallery="images-gallery" href="assets/img/gallery/kachumbari.png"><img src="assets/img/gallery/kachumbari.png" class="img-fluid" alt=""></a>
                         </div>
                     </div>
                     <div class="swiper-pagination"></div>
