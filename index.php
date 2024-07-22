@@ -182,396 +182,269 @@
         </section>
         <!-- /Stats Section -->
 
-       <!-- Menu Section -->
+<!-- Menu Section -->
 <section id="menu" class="menu section">
 
-<!-- Section Title -->
-<div class="container section-title" data-aos="fade-up">
-    <h2>Our Menu</h2>
-    <p><span>Check Our</span> <span class="description-title">Hurley Menu</span></p>
-</div>
-<!-- End Section Title -->
+    <!-- Section Title -->
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Our Menu</h2>
+        <p><span>Check Our</span> <span class="description-title">Hurley Menu</span></p>
+    </div>
+    <!-- End Section Title -->
 
-<div class="container">
+    <div class="container">
 
-    <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
+        <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
+            <li class="nav-item">
+                <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#menu-starters" onclick="checkLoginStatus()">
+                    <h4>Starters</h4>
+                </a>
+            </li>
+            <!-- End tab nav item -->
 
-        <li class="nav-item">
-            <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#menu-starters">
-                <h4>Starters</h4>
-            </a>
-        </li>
-        <!-- End tab nav item -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-breakfast" onclick="checkLoginStatus()">
+                    <h4>Breakfast</h4>
+                </a>
+            </li>
+            <!-- End tab nav item -->
 
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-breakfast">
-                <h4>Breakfast</h4>
-            </a>
-        </li>
-        <!-- End tab nav item -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-lunch" onclick="checkLoginStatus()">
+                    <h4>Lunch</h4>
+                </a>
+            </li>
+            <!-- End tab nav item -->
 
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-lunch">
-                <h4>Lunch</h4>
-            </a>
-        </li>
-        <!-- End tab nav item -->
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-dinner" onclick="checkLoginStatus()">
+                    <h4>Dinner</h4>
+                </a>
+            </li>
+            <!-- End tab nav item -->
+        </ul>
 
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-dinner">
-                <h4>Dinner</h4>
-            </a>
-        </li>
-        <!-- End tab nav item -->
+        <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+            <div class="tab-pane fade active show" id="menu-starters">
+                <div class="tab-header text-center">
+                    <p>Menu</p>
+                    <h3>Starters</h3>
+                </div>
 
-    </ul>
+                <div class="row gy-5">
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/starter/samosa.png" class="glightbox"><img src="assets/img/menu/starter/samosa.png" height="250px" class="menu-img img-fluid" alt=""></a>
+                        <h4>Samosa</h4>
+                        <p class="ingredients">Deep-fried, sweet dough snack.</p>
+                        <p class="price">Kshs. 185</p>
+                    </div>
+                    <!-- Menu Item -->
 
-    <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/starter/quaileggs.png" class="glightbox"><img src="assets/img/menu/starter/quaileggs.png" height="250px" class="menu-img img-fluid" alt=""></a>
+                        <h4>Quail Eggs</h4>
+                        <p class="ingredients">Quail eggs.</p>
+                        <p class="price">Kshs. 1,000</p>
+                    </div>
+                    <!-- Menu Item -->
 
-        <div class="tab-pane fade active show" id="menu-starters">
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/starter/cheese.png" class="glightbox"><img src="assets/img/menu/starter/cheese.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Cheese Souffle</h4>
+                        <p class="ingredients">Cheese.</p>
+                        <p class="price">Kshs. 1,200</p>
+                    </div>
+                    <!-- Menu Item -->
 
-            <div class="tab-header text-center">
-                <p>Menu</p>
-                <h3>Starters</h3>
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/starter/onionrings.png" class="glightbox"><img src="assets/img/menu/starter/onionrings.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Onion Rings</h4>
+                        <p class="ingredients">Onion rings.</p>
+                        <p class="price">Kshs. 1,000</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                </div>
             </div>
+            <!-- End Starter Menu Content -->
 
-            <div class="row gy-5">
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/starter/samosa.png" class="glightbox"><img src="assets/img/menu/starter/samosa.png" height="250px" class="menu-img img-fluid" alt=""></a>
-                    <h4>Samosa</h4>
-                    <p class="ingredients">
-                        Deep-fried, sweet dough snack.
-                    </p>
-                    <p class="price">
-                        Kshs. 185
-                    </p>
+            <div class="tab-pane fade" id="menu-breakfast">
+                <div class="tab-header text-center">
+                    <p>Menu</p>
+                    <h3>Breakfast</h3>
                 </div>
-                <!-- Menu Item -->
 
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/starter/quaileggs.png" class="glightbox"><img src="assets/img/menu/starter/quaileggs.png" height="250px" class="menu-img img-fluid" alt=""></a>
-                    <h4>Quail Eggs</h4>
-                    <p class="ingredients">
-                        Quail eggs.
-                    </p>
-                    <p class="price">
-                        Kshs. 1,000
-                    </p>
+                <div class="row gy-5">
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/breakfast/uji.png" class="glightbox"><img src="assets/img/menu/breakfast/uji.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Uji</h4>
+                        <p class="ingredients">Nutritious porridge made from millet or sorghum.</p>
+                        <p class="price">Kshs. 250</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/breakfast/coffee.png" class="glightbox"><img src="assets/img/menu/breakfast/coffee.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Coffee</h4>
+                        <p class="ingredients">Coffee</p>
+                        <p class="price">Kshs. 150</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/breakfast/eggs.jpg" class="glightbox"><img src="assets/img/menu/breakfast/eggs.jpg" class="menu-img img-fluid" alt=""></a>
+                        <h4>Eggs Sausages</h4>
+                        <p class="ingredients">Fried eggs paired with savory sausages.</p>
+                        <p class="price">Kshs. 800</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/breakfast/kebab.png" class="glightbox"><img src="assets/img/menu/breakfast/kebab.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Kebab</h4>
+                        <p class="ingredients">Spiced Kebabs</p>
+                        <p class="price">Kshs. 180</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/breakfast/maandazi.png" class="glightbox"><img src="assets/img/menu/breakfast/mandazi.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Maandazi</h4>
+                        <p class="ingredients">Maandazi</p>
+                        <p class="price">Kshs. 150</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/breakfast/latte.png" class="glightbox"><img src="assets/img/menu/breakfast/latte.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Latte</h4>
+                        <p class="ingredients">Latte.</p>
+                        <p class="price">Kshs. 200</p>
+                    </div>
+                    <!-- Menu Item -->
+
                 </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/starter/cheese.png" class="glightbox"><img src="assets/img/menu/starter/cheese.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Cheese Souffle</h4>
-                    <p class="ingredients">
-                        Cheese.
-                    </p>
-                    <p class="price">
-                        Kshs. 1,200
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/starter/onionrings.png" class="glightbox"><img src="assets/img/menu/starter/onionrings.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Onion Rings</h4>
-                    <p class="ingredients">
-                        Onion rings.
-                    </p>
-                    <p class="price">
-                        Kshs. 1,000
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <!-- <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Omena</h4>
-                    <p class="ingredients">
-                        Small dried fish cooked in a tomato sauce.
-                    </p>
-                    <p class="price">
-                        Kshs. 200
-                    </p>
-                </div> -->
-                <!-- Menu Item -->
-
-                <!-- <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Kachumbari</h4>
-                    <p class="ingredients">
-                        Fresh tomato and onion salad with a hint of chili.
-                    </p>
-                    <p class="price">
-                        Kshs. 100
-                    </p>
-                </div> -->
-                <!-- Menu Item -->
-
             </div>
+            <!-- End Breakfast Menu Content -->
+
+            <div class="tab-pane fade" id="menu-lunch">
+                <div class="tab-header text-center">
+                    <p>Menu</p>
+                    <h3>Lunch</h3>
+                </div>
+
+                <div class="row gy-5">
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/lunch//omelete.png" class="glightbox"><img src="assets/img/menu/lunch/omelete.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Asian Omelete</h4>
+                        <p class="ingredients">Asian omelete</p>
+                        <p class="price">Kshs. 1000</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/lunch/chicken.png" class="glightbox"><img src="assets/img/menu/lunch/chicken.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Chicken</h4>
+                        <p class="ingredients">Chicken.</p>
+                        <p class="price">Kshs. 600</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/lunch/fish.png" class="glightbox"><img src="assets/img/menu/lunch/fish.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Fish</h4>
+                        <p class="ingredients">Fish</p>
+                        <p class="price">Kshs. 500</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/lunch/lasagne.png" class="glightbox"><img src="assets/img/menu/lunch/lasagne.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Lasagne</h4>
+                        <p class="ingredients">Lasagne.</p>
+                        <p class="price">Kshs. 600</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/lunch/pizza.png" class="glightbox"><img src="assets/img/menu/lunch/pizza.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Pizza</h4>
+                        <p class="ingredients">Pizza</p>
+                        <p class="price">Kshs. 800</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                </div>
+            </div>
+            <!-- End Lunch Menu Content -->
+
+            <div class="tab-pane fade" id="menu-dinner">
+                <div class="tab-header text-center">
+                    <p>Menu</p>
+                    <h3>Dinner</h3>
+                </div>
+
+                <div class="row gy-5">
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/dinner/beef.png" class="glightbox"><img src="assets/img/menu/dinner/beef.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Beef</h4>
+                        <p class="ingredients">Beef</p>
+                        <p class="price">Kshs. 700</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/dinner/beanstew.png" class="glightbox"><img src="assets/img/menu/dinner/beanstew.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Bean Stew</h4>
+                        <p class="ingredients">Bean Stew</p>
+                        <p class="price">Kshs. 600</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/dinner/mutura.png" class="glightbox"><img src="assets/img/menu/dinner/mutura.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Mutura</h4>
+                        <p class="ingredients">Mutura.</p>
+                        <p class="price">Kshs. 500</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/dinner/rice.png" class="glightbox"><img src="assets/img/menu/dinner/rice.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Rice</h4>
+                        <p class="ingredients">Rice</p>
+                        <p class="price">Kshs. 500</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                    <div class="col-lg-4 menu-item">
+                        <a href="assets/img/menu/dinner/soup.png" class="glightbox"><img src="assets/img/menu/dinner/soup.png" class="menu-img img-fluid" alt=""></a>
+                        <h4>Soup</h4>
+                        <p class="ingredients">Soup</p>
+                        <p class="price">Kshs. 300</p>
+                    </div>
+                    <!-- Menu Item -->
+
+                </div>
+            </div>
+            <!-- End Dinner Menu Content -->
+
         </div>
-        <!-- End Starter Menu Content -->
-
-        <div class="tab-pane fade" id="menu-breakfast">
-
-            <div class="tab-header text-center">
-                <p>Menu</p>
-                <h3>Breakfast</h3>
-            </div>
-
-            <div class="row gy-5">
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/breakfast/uji.png" class="glightbox"><img src="assets/img/menu/breakfast/uji.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Uji</h4>
-                    <p class="ingredients">
-                    Nutritious porridge made from millet or sorghum.
-                    </p>
-                    <p class="price">
-                        Kshs. 250
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/breakfast/coffee.png" class="glightbox"><img src="assets/img/menu/breakfast/coffee.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Coffee</h4>
-                    <p class="ingredients">
-                        Coffee
-                    </p>
-                    <p class="price">
-                        Kshs. 150
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/breakfast/eggs.jpg" class="glightbox"><img src="assets/img/menu/breakfast/eggs.jpg" class="menu-img img-fluid" alt=""></a>
-                    <h4>Eggs Sausages</h4>
-                    <p class="ingredients">
-                    Fried eggs paired with savory sausages.
-                    </p>
-                    <p class="price">
-                        Kshs. 800
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/breakfast/kebab.png" class="glightbox"><img src="assets/img/menu/breakfast/kebab.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Kebab</h4>
-                    <p class="ingredients">
-Spiced Kebabs                    </p>
-                    <p class="price">
-                        Kshs. 180
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/breakfast/maandazi.png" class="glightbox"><img src="assets/img/menu/breakfast/maandazi.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Maandazi</h4>
-                    <p class="ingredients">
-Maandazi                    </p>
-                    <p class="price">
-                        Kshs. 150
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/breakfast/latte.png" class="glightbox"><img src="assets/img/menu/breakfast/latte.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Latte</h4>
-                    <p class="ingredients">
-                        Latte.
-                    </p>
-                    <p class="price">
-                        Kshs. 200
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-            </div>
-        </div>
-        <!-- End Breakfast Menu Content -->
-
-        <div class="tab-pane fade" id="menu-lunch">
-
-            <div class="tab-header text-center">
-                <p>Menu</p>
-                <h3>Lunch</h3>
-            </div>
-
-            <div class="row gy-5">
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/lunch//omelete.png" class="glightbox"><img src="assets/img/menu/lunch/omelete.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Asian Omelete</h4>
-                    <p class="ingredients">
-                        Asian omelete
-                    </p>
-                    <p class="price">
-                        Kshs. 1000
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/lunch/chicken.png" class="glightbox"><img src="assets/img/menu/lunch/chicken.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Chicken</h4>
-                    <p class="ingredients">
-                        Chicken.
-                    </p>
-                    <p class="price">
-                        Kshs. 600
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Nyama Choma</h4>
-                    <p class="ingredients">
-                        Grilled meat served with vegetables.
-                    </p>
-                    <p class="price">
-                        Kshs. 500
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Fish Curry</h4>
-                    <p class="ingredients">
-                        Spicy fish curry with a side of rice.
-                    </p>
-                    <p class="price">
-                        Kshs. 450
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Chapati and Beef Stew</h4>
-                    <p class="ingredients">
-                        Soft chapati with hearty beef stew.
-                    </p>
-                    <p class="price">
-                        Kshs. 400
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Vegetable Stir-fry</h4>
-                    <p class="ingredients">
-                        Stir-fried vegetables with a light sauce.
-                    </p>
-                    <p class="price">
-                        Kshs. 300
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-            </div>
-        </div>
-        <!-- End Lunch Menu Content -->
-
-        <div class="tab-pane fade" id="menu-dinner">
-
-            <div class="tab-header text-center">
-                <p>Menu</p>
-                <h3>Dinner</h3>
-            </div>
-
-            <div class="row gy-5">
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Chicken Stew</h4>
-                    <p class="ingredients">
-                        Savory chicken stew served with rice or ugali.
-                    </p>
-                    <p class="price">
-                        Kshs. 500
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Beef Kebabs</h4>
-                    <p class="ingredients">
-                        Grilled beef kebabs with a side of salad.
-                    </p>
-                    <p class="price">
-                        Kshs. 550
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Ugali and Sukuma Wiki</h4>
-                    <p class="ingredients">
-                        Traditional maize meal with collard greens.
-                    </p>
-                    <p class="price">
-                        Kshs. 400
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Fish Fry</h4>
-                    <p class="ingredients">
-                        Crispy fried fish with a tangy sauce.
-                    </p>
-                    <p class="price">
-                        Kshs. 450
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Beef Stew with Rice</h4>
-                    <p class="ingredients">
-                        Tender beef stew served with steamed rice.
-                    </p>
-                    <p class="price">
-                        Kshs. 500
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-                <div class="col-lg-4 menu-item">
-                    <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                    <h4>Vegetarian Pasta</h4>
-                    <p class="ingredients">
-                        Pasta with a medley of fresh vegetables.
-                    </p>
-                    <p class="price">
-                        Kshs. 400
-                    </p>
-                </div>
-                <!-- Menu Item -->
-
-            </div>
-        </div>
-        <!-- End Dinner Menu Content -->
 
     </div>
-
-</div>
-
 </section>
-<!-- /Menu Section -->
+
+<script>
+    function checkLoginStatus() {
+        // Simulate checking if the user is logged in
+        var isLoggedIn = /* Your logic to check login status, e.g., true if logged in, false otherwise */;
+        
+        if (!isLoggedIn) {
+            window.location.href = "/login";
+        }
+    }
+</script>
+
 
 
     
