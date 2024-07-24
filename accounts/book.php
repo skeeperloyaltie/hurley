@@ -14,42 +14,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Combine date and time
     $reservationDate = "$date $time";
-    
-    // Generate a unique CustomerID
-    $customerID = generateUniqueCustomerID($conn);
 
-    // Insert new customer record
-    $sqlInsertCustomer = "INSERT INTO customers (CustomerID, FirstName, LastName, Email, Username, Password, PhoneNumber, Address, City, State, ZipCode, RegistrationDate, role) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?, '', '', '', '', NOW(), 'customer')";
-    $stmtInsertCustomer = $conn->prepare($sqlInsertCustomer);
-    $defaultPassword = password_hash('defaultpassword', PASSWORD_BCRYPT); // Use a default password or generate a hash as needed
+    // Check if the customer already exists
+    $sqlCheckCustomer = "SELECT CustomerID FROM customers WHERE Email = ?";
+    $stmtCheckCustomer = $conn->prepare($sqlCheckCustomer);
+    $stmtCheckCustomer->bind_param("s", $email);
+    $stmtCheckCustomer->execute();
+    $stmtCheckCustomer->store_result();
 
-    // Bind parameters for new customer
-    $stmtInsertCustomer->bind_param("issssss", $customerID, $name, $name, $email, $email, $defaultPassword, $phone);
-    
-    if ($stmtInsertCustomer->execute()) {
-        $stmtInsertCustomer->close();
+    if ($stmtCheckCustomer->num_rows == 0) {
+        // Customer does not exist, insert a new customer record
+        $customerID = generateUniqueCustomerID($conn);
 
-        // Prepare the reservation SQL statement
-        $sqlInsertReservation = "INSERT INTO reservations (CustomerID, ReservationDate, NumberOfGuests, SpecialRequests, Status) VALUES (?, ?, ?, ?, ?)";
-        $stmtInsertReservation = $conn->prepare($sqlInsertReservation);
+        $sqlInsertCustomer = "INSERT INTO customers (CustomerID, FirstName, LastName, Email, Username, Password, PhoneNumber, Address, City, State, ZipCode, RegistrationDate, role) 
+                              VALUES (?, ?, ?, ?, ?, ?, ?, '', '', '', '', NOW(), 'customer')";
+        $stmtInsertCustomer = $conn->prepare($sqlInsertCustomer);
+        $defaultPassword = password_hash('defaultpassword', PASSWORD_BCRYPT); // Use a default password or generate a hash as needed
+
+        // Bind parameters for new customer
+        $stmtInsertCustomer->bind_param("issssss", $customerID, $name, $name, $email, $email, $defaultPassword, $phone);
         
-        $status = 'Pending';
-        $stmtInsertReservation->bind_param("issss", $customerID, $reservationDate, $people, $message, $status);
-
-        // Execute and check reservation insertion
-        if ($stmtInsertReservation->execute()) {
-            echo '<p style="color: green; font-weight: bold;">Reservation successfully added!</p>';
+        if ($stmtInsertCustomer->execute()) {
+            $stmtInsertCustomer->close();
         } else {
-            echo '<p style="color: red; font-weight: bold;">Reservation Error: ' . $stmtInsertReservation->error . '</p>';
+            echo '<p style="color: red; font-weight: bold;">Customer Insertion Error: ' . $stmtInsertCustomer->error . '</p>';
+            $stmtInsertCustomer->close();
+            $conn->close();
+            exit();
         }
-
-        // Close the reservation statement
-        $stmtInsertReservation->close();
     } else {
-        echo '<p style="color: red; font-weight: bold;">Customer Insertion Error: ' . $stmtInsertCustomer->error . '</p>';
+        // Customer exists, get the existing customer ID
+        $stmtCheckCustomer->bind_result($customerID);
+        $stmtCheckCustomer->fetch();
+    }
+    $stmtCheckCustomer->close();
+
+    // Prepare the reservation SQL statement
+    $sqlInsertReservation = "INSERT INTO reservations (CustomerID, ReservationDate, NumberOfGuests, SpecialRequests, Status) VALUES (?, ?, ?, ?, ?)";
+    $stmtInsertReservation = $conn->prepare($sqlInsertReservation);
+    
+    $status = 'Pending';
+    $stmtInsertReservation->bind_param("issss", $customerID, $reservationDate, $people, $message, $status);
+
+    // Execute and check reservation insertion
+    if ($stmtInsertReservation->execute()) {
+        echo '<p style="color: green; font-weight: bold;">Reservation successfully added!</p>';
+    } else {
+        echo '<p style="color: red; font-weight: bold;">Reservation Error: ' . $stmtInsertReservation->error . '</p>';
     }
 
+    // Close the reservation statement
+    $stmtInsertReservation->close();
     // Close the database connection
     $conn->close();
 }
