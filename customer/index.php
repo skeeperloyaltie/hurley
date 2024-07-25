@@ -190,28 +190,105 @@ if ($paymentsStmt) {
 } else {
     echo "Error preparing statement: " . $mysqli->error;
 }
+
+//feedback 
+
+// Handle Feedback Submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_feedback'])) {
+    $rating = $_POST['rating'];
+    $message = $_POST['message'];
+
+    // Validate feedback
+    if (empty($rating)) {
+        $_SESSION['message'] = 'Rating is required.';
+        $_SESSION['message_type'] = 'error';
+    } else {
+        $stmt = $mysqli->prepare("INSERT INTO feedback (CustomerID, Rating, Comments) VALUES (?, ?, ?)");
+        if ($stmt) {
+            $stmt->bind_param("iis", $customerID, $rating, $message);
+            if ($stmt->execute()) {
+                $_SESSION['message'] = 'Feedback submitted successfully.';
+                $_SESSION['message_type'] = 'success';
+            } else {
+                $_SESSION['message'] = "Error executing statement: " . $stmt->error;
+                $_SESSION['message_type'] = 'error';
+            }
+            $stmt->close();
+        } else {
+            $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+            $_SESSION['message_type'] = 'error';
+        }
+    }
+
+    // Redirect to avoid form resubmission
+    header("Location: customer_dashboard.php");
+    exit;
+}
+
+// Handle Feedback Editing
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_feedback'])) {
+    $feedbackID = $_POST['feedback_id'];
+    $rating = $_POST['rating'];
+    $message = $_POST['message'];
+
+    // Validate feedback
+    if (empty($rating)) {
+        $_SESSION['message'] = 'Rating is required.';
+        $_SESSION['message_type'] = 'error';
+    } else {
+        $stmt = $mysqli->prepare("UPDATE feedback SET Rating = ?, Comments = ? WHERE FeedbackID = ? AND CustomerID = ?");
+        if ($stmt) {
+            $stmt->bind_param("isii", $rating, $message, $feedbackID, $customerID);
+            if ($stmt->execute()) {
+                $_SESSION['message'] = 'Feedback updated successfully.';
+                $_SESSION['message_type'] = 'success';
+            } else {
+                $_SESSION['message'] = "Error executing statement: " . $stmt->error;
+                $_SESSION['message_type'] = 'error';
+            }
+            $stmt->close();
+        } else {
+            $_SESSION['message'] = "Error preparing statement: " . $mysqli->error;
+            $_SESSION['message_type'] = 'error';
+        }
+    }
+
+    // Redirect to avoid form resubmission
+    header("Location: customer_dashboard.php");
+    exit;
+}
+
+// Fetch feedback data
+$feedbackQuery = "SELECT f.FeedbackID, CONCAT(c.FirstName, ' ', c.LastName) AS CustomerName, f.Rating, f.Comments, f.FeedbackDate 
+                  FROM feedback f 
+                  JOIN customers c ON f.CustomerID = c.CustomerID 
+                  ORDER BY f.FeedbackDate DESC";
+$feedbackResult = $mysqli->query($feedbackQuery);
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container mt-4">
         <h1>Customer Dashboard</h1>
 
         <!-- Display messages -->
-        <?php if (isset($_SESSION['message'])): ?>
-        <div class="alert alert-<?php echo $_SESSION['message_type'] === 'success' ? 'success' : 'danger'; ?>">
-            <?php echo $_SESSION['message']; ?>
-        </div>
+        <?php if (isset($_SESSION['message'])) : ?>
+            <div class="alert alert-<?php echo $_SESSION['message_type'] === 'success' ? 'success' : 'danger'; ?>">
+                <?php echo $_SESSION['message']; ?>
+            </div>
         <?php
-        unset($_SESSION['message']);
-        unset($_SESSION['message_type']);
+            unset($_SESSION['message']);
+            unset($_SESSION['message_type']);
         endif;
         ?>
 
@@ -234,6 +311,9 @@ if ($paymentsStmt) {
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="view-payments-tab" data-toggle="tab" href="#view-payments" role="tab" aria-controls="view-payments" aria-selected="false">View Payments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
             </li>
             <div style="float:right;" class="mb-4">
                 <a href="logout.php" class="btn btn-danger">Logout</a>
@@ -263,8 +343,8 @@ if ($paymentsStmt) {
                     <div class="form-group">
                         <label for="menu_item_id">Menu Item</label>
                         <select multiple class="form-control" id="menu_item_id" name="menu_item_id[]">
-                            <?php while ($menuItem = $menuItemsResult->fetch_assoc()): ?>
-                            <option value="<?php echo $menuItem['MenuItemID']; ?>"><?php echo $menuItem['Name']; ?></option>
+                            <?php while ($menuItem = $menuItemsResult->fetch_assoc()) : ?>
+                                <option value="<?php echo $menuItem['MenuItemID']; ?>"><?php echo $menuItem['Name']; ?></option>
                             <?php endwhile; ?>
                         </select>
                     </div>
@@ -312,13 +392,13 @@ if ($paymentsStmt) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($reservation = $reservationsResult->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $reservation['ReservationID']; ?></td>
-                            <td><?php echo $reservation['NumberOfGuests']; ?></td>
-                            <td><?php echo $reservation['SpecialRequests']; ?></td>
-                            <td><?php echo $reservation['ReservationDate']; ?></td>
-                        </tr>
+                        <?php while ($reservation = $reservationsResult->fetch_assoc()) : ?>
+                            <tr>
+                                <td><?php echo $reservation['ReservationID']; ?></td>
+                                <td><?php echo $reservation['NumberOfGuests']; ?></td>
+                                <td><?php echo $reservation['SpecialRequests']; ?></td>
+                                <td><?php echo $reservation['ReservationDate']; ?></td>
+                            </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
@@ -337,13 +417,13 @@ if ($paymentsStmt) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($order = $ordersResult->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $order['OrderID']; ?></td>
-                            <td><?php echo $order['TotalAmount']; ?></td>
-                            <td><?php echo $order['Status']; ?></td>
-                            <td><?php echo $order['OrderDate']; ?></td>
-                        </tr>
+                        <?php while ($order = $ordersResult->fetch_assoc()) : ?>
+                            <tr>
+                                <td><?php echo $order['OrderID']; ?></td>
+                                <td><?php echo $order['TotalAmount']; ?></td>
+                                <td><?php echo $order['Status']; ?></td>
+                                <td><?php echo $order['OrderDate']; ?></td>
+                            </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
@@ -364,25 +444,146 @@ if ($paymentsStmt) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($payment = $paymentsResult->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $payment['PaymentID']; ?></td>
-                            <td><?php echo $payment['OrderID']; ?></td>
-                            <td><?php echo $payment['Amount']; ?></td>
-                            <td><?php echo $payment['PaymentMethod']; ?></td>
-                            <td><?php echo $payment['TransactionID']; ?></td>
-                            <td><?php echo $payment['PaymentDate']; ?></td>
-                        </tr>
+                        <?php while ($payment = $paymentsResult->fetch_assoc()) : ?>
+                            <tr>
+                                <td><?php echo $payment['PaymentID']; ?></td>
+                                <td><?php echo $payment['OrderID']; ?></td>
+                                <td><?php echo $payment['Amount']; ?></td>
+                                <td><?php echo $payment['PaymentMethod']; ?></td>
+                                <td><?php echo $payment['TransactionID']; ?></td>
+                                <td><?php echo $payment['PaymentDate']; ?></td>
+                            </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
             </div>
+            <!-- Feedback -->
+
+            <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+                <!-- Feedback Form -->
+                <form action="customer_dashboard.php" method="POST" class="mt-4">
+                    <h3>Submit Feedback</h3>
+                    <div class="form-group">
+                        <label for="rating">Rating</label>
+                        <select class="form-control" id="rating" name="rating" required>
+                            <option value="1">1 - Poor</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="3">3 - Good</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="5">5 - Excellent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Comments</label>
+                        <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+                    </div>
+                    <button type="submit" name="submit_feedback" class="btn btn-primary">Submit Feedback</button>
+                </form>
+
+                <!-- Display Feedback -->
+                <h3 class="mt-4">User Feedback</h3>
+                <?php if (isset($_SESSION['message'])) : ?>
+                    <div class="alert alert-<?php echo $_SESSION['message_type'] === 'success' ? 'success' : 'danger'; ?>">
+                        <?php echo $_SESSION['message']; ?>
+                    </div>
+                <?php
+                    unset($_SESSION['message']);
+                    unset($_SESSION['message_type']);
+                endif;
+                ?>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Rating</th>
+                            <th>Comments</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($feedback = $feedbackResult->fetch_assoc()) : ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($feedback['CustomerName']); ?></td>
+                                <td><?php echo htmlspecialchars($feedback['Rating']); ?></td>
+                                <td><?php echo htmlspecialchars($feedback['Comments']); ?></td>
+                                <td><?php echo htmlspecialchars($feedback['FeedbackDate']); ?></td>
+                                <?php if ($feedback['CustomerID'] == $user_id) : ?>
+                                    <td>
+                                        <a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editFeedbackModal" data-id="<?php echo $feedback['FeedbackID']; ?>" data-rating="<?php echo $feedback['Rating']; ?>" data-comments="<?php echo $feedback['Comments']; ?>">Edit</a>
+                                    </td>
+                                <?php else : ?>
+                                    <td></td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Edit Feedback Modal -->
+            <div class="modal fade" id="editFeedbackModal" tabindex="-1" role="dialog" aria-labelledby="editFeedbackModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editFeedbackModalLabel">Edit Feedback</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="customer_dashboard.php" method="POST">
+                                <input type="hidden" id="edit_feedback_id" name="feedback_id">
+                                <div class="form-group">
+                                    <label for="edit_rating">Rating</label>
+                                    <select class="form-control" id="edit_rating" name="rating" required>
+                                        <option value="1">1 - Poor</option>
+                                        <option value="2">2 - Fair</option>
+                                        <option value="3">3 - Good</option>
+                                        <option value="4">4 - Very Good</option>
+                                        <option value="5">5 - Excellent</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_message">Comments</label>
+                                    <textarea class="form-control" id="edit_message" name="message" rows="3"></textarea>
+                                </div>
+                                <button type="submit" name="edit_feedback" class="btn btn-primary">Update Feedback</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                // Populate edit modal with data
+                $('#editFeedbackModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget); // Button that triggered the modal
+                    var feedbackID = button.data('id'); // Extract info from data-* attributes
+                    var rating = button.data('rating');
+                    var comments = button.data('comments');
+
+                    // Update the modal's content
+                    var modal = $(this);
+                    modal.find('#edit_feedback_id').val(feedbackID);
+                    modal.find('#edit_rating').val(rating);
+                    modal.find('#edit_message').val(comments);
+                });
+            </script>
+
+
         </div>
     </div>
 
     <!-- Bootstrap and jQuery scripts -->
+    <!-- Bootstrap and jQuery scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
